@@ -8,7 +8,7 @@ type TripPhoto = {
   alt: string;
   caption: string;
   credit: string;
-  source: string;
+  source?: string;
 };
 type Stop = {
   time: string;
@@ -64,6 +64,14 @@ const photos = {
   pajeon: { src: "/places/pajeon.jpg", alt: "放在黃色餐盤上的韓式海鮮煎餅", caption: "青沙浦的海鮮煎餅", credit: "Adonis Chen · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Korean_pancake-Haemul_pajeon-01.jpg" },
   songdo: { src: "/places/songdo.jpg", alt: "晴天下的釜山松島海灘與城市天際線", caption: "從纜車俯瞰的松島海岸", credit: "Michiel1972 · CC BY-SA 3.0", source: "https://commons.wikimedia.org/wiki/File:Busan_-_Songdo_beach.jpg" },
   koreanHomeMeal: { src: "/places/korean-home-meal.jpg", alt: "韓式家常套餐與多樣小菜", caption: "述古堂的韓式家常料理氛圍", credit: "Ina Woo · CC BY-SA 4.0 · 示意照片", source: "https://commons.wikimedia.org/wiki/File:Rotary_Korean_Traditional_Set_Menu.jpg" },
+  skylineLuge: { src: "/places/skyline-luge-ai.jpg", alt: "旅客沿著釜山海岸山坡駕駛滑車", caption: "Skyline Luge 的下坡體驗・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
+  lotteDongbusan: { src: "/places/lotte-dongbusan-ai.jpg", alt: "東釜山現代購物中心與戶外廣場", caption: "樂天東釜山購物時光・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
+  beachTrain: { src: "/places/beach-train-ai.jpg", alt: "藍黃色海岸列車行駛在釜山岩岸旁", caption: "貼著海岸前進的海岸列車・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
+  mipoStation: { src: "/places/mipo-station-ai.jpg", alt: "旅客在現代玻璃外觀的尾浦海岸車站前集合", caption: "尾浦站集合出發・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
+  hanwoo: { src: "/places/hanwoo-beef.jpg", alt: "炭火烤網上油花細緻的韓式牛肉", caption: "海雲台韓牛午餐", credit: "Jo Hanshin · CC0", source: "https://commons.wikimedia.org/wiki/File:Korean_Barbecue,_Beef.jpg" },
+  gwangalliBeach: { src: "/places/gwangalli-beach.jpg", alt: "白天的廣安里沙灘、海面與城市天際線", caption: "廣安里海邊集合", credit: "Chelsea Hicks · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Gwangalli_Beach.jpg" },
+  yachtBridge: { src: "/places/yacht-gwangan-bridge.jpg", alt: "從遊船近距離仰望夜晚點燈的廣安大橋橋塔", caption: "從遊艇仰望廣安大橋", credit: "Spike · Public domain", source: "https://commons.wikimedia.org/wiki/File:Busan_Gwangan_Bridge_pylon_at_night_01.jpg" },
+  gwangalliNight: { src: "/places/gwangalli-night.jpg", alt: "廣安里沙灘對岸明亮的夜間街景", caption: "廣安里夜晚散步", credit: "Carey Ciuro · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Busan_Gwangalli_Night.jpg" },
 } satisfies Record<string, TripPhoto>;
 
 const photoCredits = Object.values(photos);
@@ -133,7 +141,7 @@ const days: Day[] = [
     tabLabel: "海岸冒險",
     title: "滑車・購物・海岸列車",
     subtitle: "從速度感到寺廟海景，傍晚沿著海岸線慢慢回到城市。",
-    photos: [photos.temple, photos.haeundae],
+    photos: [photos.skylineLuge, photos.temple, photos.beachTrain],
     stops: [
       {
         time: "10:00 — 12:00",
@@ -141,7 +149,7 @@ const days: Day[] = [
         title: "Skyline Luge Busan",
         summary: "自己控制滑車速度，享受海景與山景。",
         detail: "刺激度親切、適合朋友與親子同樂。戶外行程建議穿著方便活動的鞋，並做好防曬。",
-        photos: [photos.haeundae],
+        photos: [photos.skylineLuge],
         place: place("Skyline Luge Busan", "스카이라인루지 부산"),
       },
       {
@@ -150,7 +158,7 @@ const days: Day[] = [
         title: "樂天百貨・午餐與逛街",
         summary: "美食街、品牌商店、咖啡與伴手禮一次完成。",
         detail: "安排兩小時用餐與休息，也能補齊韓國保養品、服飾及旅程所需用品。",
-        photos: [photos.haeundae],
+        photos: [photos.lotteDongbusan],
         place: place("Lotte Mall Dongbusan", "롯데몰 동부산점"),
       },
       {
@@ -169,7 +177,7 @@ const days: Day[] = [
         title: "海雲台海岸列車",
         summary: "沿海岸線前進，在傍晚收藏海景與小站。",
         detail: "海岸列車節奏比天空膠囊快，沿途可看見岩岸、海面與特色小站；搭乘方向依實際票券為準。",
-        photos: [photos.capsule],
+        photos: [photos.beachTrain],
         place: place("Haeundae Beach Train Mipo Station", "해운대 해변열차 미포정거장"),
       },
       {
@@ -192,7 +200,7 @@ const days: Day[] = [
     tabLabel: "海雲台夜色",
     title: "韓牛・天空膠囊・遊艇夜景",
     subtitle: "白天貼著海岸移動，夜裡從船上仰望發光的廣安大橋。",
-    photos: [photos.bbq, photos.capsule, photos.gwangan],
+    photos: [photos.hanwoo, photos.capsule, photos.yachtBridge],
     stops: [
       {
         time: "11:00 — 12:30",
@@ -200,7 +208,7 @@ const days: Day[] = [
         title: "海雲台母韓牛",
         summary: "細緻油花與香氣，是這趟旅程的美食重點。",
         detail: "午餐吃韓牛，下午銜接海雲台與青沙浦最順。熱門時段建議提早訂位。",
-        photos: [photos.bbq],
+        photos: [photos.hanwoo],
         place: place("Haeundae Amso Galbijip", "해운대암소갈비집"),
       },
       {
@@ -218,7 +226,7 @@ const days: Day[] = [
         title: "抵達尾浦站",
         summary: "提早集合，預留拍照、排隊與確認票券時間。",
         detail: "尾浦站是天空膠囊熱門起點。確認搭乘人數與 QR Code，別把時間卡得太剛好。",
-        photos: [photos.capsule],
+        photos: [photos.mipoStation],
         place: place("Mipo Station Haeundae Blue Line Park", "해운대블루라인파크 미포정거장"),
       },
       {
@@ -246,7 +254,7 @@ const days: Day[] = [
         title: "廣安里遊艇集合",
         summary: "以韓文搜尋集合點，讓司機更容易定位。",
         detail: "從青沙浦前往廣安里建議搭計程車，避免多次轉乘。19:00 集合，預留找碼頭與報到時間。",
-        photos: [photos.gwangan],
+        photos: [photos.gwangalliBeach],
         note: "搜尋：광안리해양레포츠센터",
         place: place("Gwangalli Marine Leisure Sports Center", "광안리해양레포츠센터"),
       },
@@ -256,7 +264,7 @@ const days: Day[] = [
         title: "廣安里遊艇趴",
         summary: "海風、城市高樓與廣安大橋燈光的夜間高潮。",
         detail: "從海面看廣安大橋比岸上更有包圍感。海上風大，可帶薄外套並固定好帽子與隨身物品。",
-        photos: [photos.gwangan],
+        photos: [photos.yachtBridge],
         place: place("Gwangalli Beach", "광안리해수욕장"),
       },
       {
@@ -265,7 +273,7 @@ const days: Day[] = [
         title: "廣安里散步＋消夜",
         summary: "沿沙灘散步，再用炸雞、海鮮或咖啡替夜晚收尾。",
         detail: "表演結束後自由續攤。岸邊夜景視野開闊，也適合拍團體照。",
-        photos: [photos.gwangan],
+        photos: [photos.gwangalliNight],
         place: place("Gwangalli Beach restaurants", "광안리 맛집"),
       },
     ],
@@ -286,7 +294,6 @@ const days: Day[] = [
         title: "從飯店出發",
         summary: "今日集中在南浦洞、甘川洞、松島與札嘎其一帶。",
         detail: "景點較多，穿好走的鞋並帶上防曬。行李留在飯店，輕裝移動最舒服。",
-        photos: [photos.hotel],
       },
       {
         time: "11:00 — 12:45",
@@ -353,7 +360,6 @@ const days: Day[] = [
         title: "退房・附近早午餐",
         summary: "簡單吃、最後補貨，避免帶著行李跑太遠。",
         detail: "確認護照、行李與免稅提貨單。把握附近散步時間，11:15 前準時集合出發。",
-        photos: [photos.hotel],
       },
       {
         time: "11:15 — 12:00",
@@ -361,7 +367,6 @@ const days: Day[] = [
         title: "前往釜山金海機場",
         summary: "保留交通緩衝，避免塞車或臨時狀況。",
         detail: "團體移動請確認車輛與行李數量，抵達機場後先找釜山航空櫃檯。",
-        photos: [photos.airport],
         place: place("Gimhae International Airport", "김해국제공항"),
       },
       {
@@ -611,7 +616,10 @@ export default function Home() {
         <details className="photo-credits">
           <summary>照片來源與授權</summary>
           <div>
-            {photoCredits.map((photo) => <a href={photo.source} target="_blank" rel="noreferrer" key={photo.src}>{photo.caption} — {photo.credit}</a>)}
+            {photoCredits.map((photo) => photo.source
+              ? <a href={photo.source} target="_blank" rel="noreferrer" key={photo.src}>{photo.caption} — {photo.credit}</a>
+              : <span key={photo.src}>{photo.caption} — {photo.credit}</span>
+            )}
           </div>
         </details>
       </footer>
@@ -620,7 +628,12 @@ export default function Home() {
           <button className="lightbox-close" onClick={() => setSelectedPhoto(null)} aria-label="關閉照片">×</button>
           <figure>
             <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
-            <figcaption><span>{selectedPhoto.caption}</span><a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a></figcaption>
+            <figcaption>
+              <span>{selectedPhoto.caption}</span>
+              {selectedPhoto.source
+                ? <a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a>
+                : <span className="ai-credit">{selectedPhoto.credit}</span>}
+            </figcaption>
           </figure>
         </div>
       )}
