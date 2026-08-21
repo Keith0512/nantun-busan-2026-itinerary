@@ -8,7 +8,7 @@ type TripPhoto = {
   alt: string;
   caption: string;
   credit: string;
-  source?: string;
+  source: string;
 };
 type Stop = {
   time: string;
@@ -64,10 +64,10 @@ const photos = {
   pajeon: { src: "/places/pajeon.jpg", alt: "放在黃色餐盤上的韓式海鮮煎餅", caption: "青沙浦的海鮮煎餅", credit: "Adonis Chen · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Korean_pancake-Haemul_pajeon-01.jpg" },
   songdo: { src: "/places/songdo.jpg", alt: "晴天下的釜山松島海灘與城市天際線", caption: "從纜車俯瞰的松島海岸", credit: "Michiel1972 · CC BY-SA 3.0", source: "https://commons.wikimedia.org/wiki/File:Busan_-_Songdo_beach.jpg" },
   koreanHomeMeal: { src: "/places/korean-home-meal.jpg", alt: "韓式家常套餐與多樣小菜", caption: "述古堂的韓式家常料理氛圍", credit: "Ina Woo · CC BY-SA 4.0 · 示意照片", source: "https://commons.wikimedia.org/wiki/File:Rotary_Korean_Traditional_Set_Menu.jpg" },
-  skylineLuge: { src: "/places/skyline-luge-ai.jpg", alt: "旅客沿著釜山海岸山坡駕駛滑車", caption: "Skyline Luge 的下坡體驗・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
-  lotteDongbusan: { src: "/places/lotte-dongbusan-ai.jpg", alt: "東釜山現代購物中心與戶外廣場", caption: "樂天東釜山購物時光・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
-  beachTrain: { src: "/places/beach-train-ai.jpg", alt: "藍黃色海岸列車行駛在釜山岩岸旁", caption: "貼著海岸前進的海岸列車・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
-  mipoStation: { src: "/places/mipo-station-ai.jpg", alt: "旅客在現代玻璃外觀的尾浦海岸車站前集合", caption: "尾浦站集合出發・AI 示意", credit: "OpenAI ImageGen · AI 示意圖" },
+  skylineLuge: { src: "/places/skyline-luge.jpg", alt: "從高處俯瞰釜山 Skyline Luge 的蜿蜒滑車軌道", caption: "Skyline Luge Busan 全景", credit: "韓國觀光公社 · VISITKOREA", source: "https://english.visitkorea.or.kr/svc/contents/contentsView.do?menuSn=351&vcontsId=187019" },
+  lotteDongbusan: { src: "/places/lotte-dongbusan.jpg", alt: "藍天下的樂天東釜山購物中心正門", caption: "樂天東釜山購物中心", credit: "韓國觀光公社 · VISITKOREA", source: "https://data.visitkorea.or.kr/resource/1993017" },
+  beachTrain: { src: "/places/beach-train.jpg", alt: "藍色海岸列車沿海雲台綠色鐵道迎面駛來", caption: "海雲台海岸列車", credit: "海雲台區 · 韓國觀光公社", source: "https://data.visitkorea.or.kr/resource/2672393" },
+  mipoStation: { src: "/places/mipo-station.jpg", alt: "旅客沿著尾浦舊鐵道與海岸路線步行", caption: "尾浦站周邊的海岸鐵道路線", credit: "韓國觀光公社 · VISITKOREA", source: "https://data.visitkorea.or.kr/page/2789488" },
   hanwoo: { src: "/places/hanwoo-beef.jpg", alt: "炭火烤網上油花細緻的韓式牛肉", caption: "海雲台韓牛午餐", credit: "Jo Hanshin · CC0", source: "https://commons.wikimedia.org/wiki/File:Korean_Barbecue,_Beef.jpg" },
   gwangalliBeach: { src: "/places/gwangalli-beach.jpg", alt: "白天的廣安里沙灘、海面與城市天際線", caption: "廣安里海邊集合", credit: "Chelsea Hicks · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Gwangalli_Beach.jpg" },
   yachtBridge: { src: "/places/yacht-gwangan-bridge.jpg", alt: "從遊船近距離仰望夜晚點燈的廣安大橋橋塔", caption: "從遊艇仰望廣安大橋", credit: "Spike · Public domain", source: "https://commons.wikimedia.org/wiki/File:Busan_Gwangan_Bridge_pylon_at_night_01.jpg" },
@@ -616,10 +616,7 @@ export default function Home() {
         <details className="photo-credits">
           <summary>照片來源與授權</summary>
           <div>
-            {photoCredits.map((photo) => photo.source
-              ? <a href={photo.source} target="_blank" rel="noreferrer" key={photo.src}>{photo.caption} — {photo.credit}</a>
-              : <span key={photo.src}>{photo.caption} — {photo.credit}</span>
-            )}
+            {photoCredits.map((photo) => <a href={photo.source} target="_blank" rel="noreferrer" key={photo.src}>{photo.caption} — {photo.credit}</a>)}
           </div>
         </details>
       </footer>
@@ -628,12 +625,7 @@ export default function Home() {
           <button className="lightbox-close" onClick={() => setSelectedPhoto(null)} aria-label="關閉照片">×</button>
           <figure>
             <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
-            <figcaption>
-              <span>{selectedPhoto.caption}</span>
-              {selectedPhoto.source
-                ? <a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a>
-                : <span className="ai-credit">{selectedPhoto.credit}</span>}
-            </figcaption>
+            <figcaption><span>{selectedPhoto.caption}</span><a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a></figcaption>
           </figure>
         </div>
       )}

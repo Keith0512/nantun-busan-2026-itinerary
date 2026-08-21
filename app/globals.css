@@ -193,14 +193,13 @@ footer { background: #0b1c16; color: #fff; padding: 90px max(28px, calc((100vw -
 .photo-credits { margin-top: 22px; color: rgba(255,255,255,.42); font-size: 9px; }
 .photo-credits summary { width: fit-content; cursor: pointer; letter-spacing: .08em; }
 .photo-credits > div { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px 24px; margin-top: 18px; max-width: 900px; }
-.photo-credits a, .photo-credits > div > span { color: rgba(255,255,255,.42); text-decoration: none; line-height: 1.5; }
+.photo-credits a { color: rgba(255,255,255,.42); text-decoration: none; line-height: 1.5; }
 .photo-credits a:hover { color: var(--lime); }
 .lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 62px 24px 30px; background: rgba(4,15,12,.92); backdrop-filter: blur(18px); animation: lightbox-in .25s ease both; }
 .lightbox figure { margin: 0; max-width: min(1180px, 92vw); max-height: 88vh; }
 .lightbox figure img { display: block; max-width: 100%; max-height: calc(88vh - 60px); object-fit: contain; box-shadow: 0 30px 80px rgba(0,0,0,.4); }
 .lightbox figcaption { display: flex; align-items: center; justify-content: space-between; gap: 22px; color: #fff; padding-top: 14px; font-size: 11px; }
 .lightbox figcaption a { color: rgba(255,255,255,.55); text-decoration: none; font-size: 9px; }
-.lightbox figcaption .ai-credit { color: rgba(255,255,255,.55); font-size: 9px; }
 .lightbox-close { position: absolute; right: 24px; top: 20px; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: transparent; color: #fff; cursor: pointer; font-size: 27px; font-weight: 200; line-height: 1; }
 .back-top { position: fixed; right: 22px; bottom: 22px; z-index: 5; width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%; background: var(--lime); text-decoration: none; color: var(--ink); font-weight: 800; box-shadow: 0 8px 24px rgba(0,0,0,.15); }
 
