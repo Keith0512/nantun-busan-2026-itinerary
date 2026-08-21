@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nantun-busan-2026.mars0512.chatgpt.site"),
   title: "南屯團隊｜釜山 5天4夜",
   description: "2026 釜山 5天4夜互動旅遊行程，景點、美食與導航一次整理。",
   openGraph: {

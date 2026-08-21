@@ -153,7 +153,7 @@ const days: Day[] = [
         title: "海雲台母韓牛",
         summary: "細緻油花與香氣，是這趟旅程的美食重點。",
         detail: "午餐吃韓牛，下午銜接海雲台與青沙浦最順。熱門時段建議提早訂位。",
-        place: place("Haeundae Korean beef Busan", "해운대 한우"),
+        place: place("Haeundae Amso Galbijip", "해운대암소갈비집"),
       },
       {
         time: "14:00 — 15:30",
@@ -237,7 +237,7 @@ const days: Day[] = [
         title: "述古堂中餐",
         summary: "用中式料理調整口味，吃飽再開始午後景點。",
         detail: "適合長輩或想暫時換口味的團員。店家名稱可能有譯名差異，出發前建議再次確認定位。",
-        place: place("述古堂 Busan", "서고당 부산"),
+        place: place("述古堂 Busan", "述古堂 부산"),
       },
       {
         time: "13:00 — 15:00",
