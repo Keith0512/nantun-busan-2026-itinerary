@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type MapPlace = { label?: string; google: string; naver: string };
+type TripPhoto = {
+  src: string;
+  alt: string;
+  caption: string;
+  credit: string;
+  source: string;
+};
 type Stop = {
   time: string;
   tag: string;
@@ -21,6 +28,7 @@ type Day = {
   tabLabel: string;
   title: string;
   subtitle: string;
+  photos: TripPhoto[];
   stops: Stop[];
 };
 
@@ -34,6 +42,27 @@ const place = (google: string, naver: string, label?: string): MapPlace => ({
   label,
 });
 
+const hotelPlace = place(
+  "LCT Residence Y collection Busan",
+  "부산 해운대구 달맞이길 30 엘시티 레지던스",
+  "LCT Residence Y collection",
+);
+
+const photos = {
+  airport: { src: "/places/airport.jpg", alt: "釜山金海國際機場外觀", caption: "金海國際機場", credit: "螺钉 · CC BY-SA 3.0", source: "https://commons.wikimedia.org/wiki/File:Gimhae_International_Airport.jpg" },
+  hotel: { src: "/places/hotel-lct.jpg", alt: "夜晚從海雲台海灘望向 LCT 建築群", caption: "我們在海雲台的落腳處", credit: "308 Bees · CC0", source: "https://commons.wikimedia.org/wiki/File:HaeundaeLCT_atNight.jpg" },
+  temple: { src: "/places/temple.jpg", alt: "臨海岩岸上的海東龍宮寺", caption: "海東龍宮寺", credit: "Christian Bolz · CC BY-SA 4.0", source: "https://commons.wikimedia.org/wiki/File:Haedong_Yonggungsa_Temple_near_Busan.jpg" },
+  haeundae: { src: "/places/haeundae.jpg", alt: "陽光下的海雲台海灘與城市天際線", caption: "海雲台的夏日海岸", credit: "StephNurnberg · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Haeundae_Beach_in_Busan.jpg" },
+  bbq: { src: "/places/korean-bbq.jpg", alt: "炭火烤盤上的韓式烤肉", caption: "用韓牛開啟第三天", credit: "eommina · CC0", source: "https://commons.wikimedia.org/wiki/File:Korean_BBQ.jpg" },
+  capsule: { src: "/places/capsule.jpg", alt: "海雲台藍線公園高架軌道上的黃色天空膠囊", caption: "尾浦到青沙浦的天空膠囊", credit: "VN.NguyenDucDuy · CC BY-SA 4.0", source: "https://commons.wikimedia.org/wiki/File:Sky_Capsule_train_at_Haeundae_Blueline_Park,_Busan.jpg" },
+  gwangan: { src: "/places/gwangan.jpg", alt: "夜色中的廣安大橋與城市燈光", caption: "從海上看廣安大橋夜景", credit: "Jeena Paradies · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Gwangan_Bridge_seen_Marine_City_at_Night_01.jpg" },
+  gamcheon: { src: "/places/gamcheon.jpg", alt: "甘川洞文化村的彩色山城住宅", caption: "甘川洞的彩色山城", credit: "Bernard Gagnon · CC0", source: "https://commons.wikimedia.org/wiki/File:Gamcheon_Culture_Village.jpg" },
+  huinnyeoul: { src: "/places/huinnyeoul.jpg", alt: "白淺灘文化村沿海坡道與城市海景", caption: "白淺灘文化村的海岸散步", credit: "Choi2451 · CC0", source: "https://commons.wikimedia.org/wiki/File:Huinnyeoul_culture_village,_Busan_on_October_25th,_2019.jpg" },
+  jagalchi: { src: "/places/jagalchi.jpg", alt: "札嘎其市場內販售新鮮海產的攤位", caption: "札嘎其市場的熱鬧海味", credit: "Bernard Gagnon · CC0", source: "https://commons.wikimedia.org/wiki/File:Jagalchi_Market_01.jpg" },
+} satisfies Record<string, TripPhoto>;
+
+const photoCredits = Object.values(photos);
+
 const days: Day[] = [
   {
     number: "01",
@@ -43,6 +72,7 @@ const days: Day[] = [
     tabLabel: "抵達釜山",
     title: "抵達釜山・深夜美食",
     subtitle: "把步調放慢，從一碗熱湯開始認識這座海港城市。",
+    photos: [photos.hotel, photos.airport],
     stops: [
       {
         time: "16:40",
@@ -71,9 +101,11 @@ const days: Day[] = [
       {
         time: "21:00 — 21:30",
         tag: "CHECK-IN",
-        title: "前往市區飯店",
-        summary: "辦理入住、稍作整理，第一晚保留體力。",
-        detail: "不安排緊湊景點，先熟悉飯店周邊與隔天集合方式。飯店確定後，可再把導航連結補進這張卡片。",
+        title: "LCT Residence Y collection",
+        summary: "前往海雲台飯店，辦理入住、稍作整理。",
+        detail: "住宿位於 LCT Residence，地址為 30 Dalmaji-gil, Haeundae-gu, Busan。第一晚不排滿，先熟悉周邊與隔天集合方式。",
+        note: "訂房頁標示：B4, LCT Residence",
+        place: hotelPlace,
       },
       {
         time: "22:00 —",
@@ -93,6 +125,7 @@ const days: Day[] = [
     tabLabel: "海岸冒險",
     title: "滑車・購物・海岸列車",
     subtitle: "從速度感到寺廟海景，傍晚沿著海岸線慢慢回到城市。",
+    photos: [photos.temple, photos.haeundae],
     stops: [
       {
         time: "10:00 — 12:00",
@@ -146,6 +179,7 @@ const days: Day[] = [
     tabLabel: "海雲台夜色",
     title: "韓牛・天空膠囊・遊艇夜景",
     subtitle: "白天貼著海岸移動，夜裡從船上仰望發光的廣安大橋。",
+    photos: [photos.bbq, photos.capsule, photos.gwangan],
     stops: [
       {
         time: "11:00 — 12:30",
@@ -223,6 +257,7 @@ const days: Day[] = [
     tabLabel: "南釜山散策",
     title: "山城・纜車夕陽・海鮮市場",
     subtitle: "一路向南，在彩色山城、藍白聚落與市場人聲之間感受老釜山。",
+    photos: [photos.gamcheon, photos.huinnyeoul, photos.jagalchi],
     stops: [
       {
         time: "10:00",
@@ -234,10 +269,11 @@ const days: Day[] = [
       {
         time: "11:00 — 12:45",
         tag: "LUNCH",
-        title: "述古堂中餐",
-        summary: "用中式料理調整口味，吃飽再開始午後景點。",
-        detail: "適合長輩或想暫時換口味的團員。店家名稱可能有譯名差異，出發前建議再次確認定位。",
-        place: place("述古堂 Busan", "述古堂 부산"),
+        title: "述古堂 술고당・午餐",
+        summary: "韓式家常料理，另有素食友善選擇。",
+        detail: "地址：부산 중구 중구로24번길 11-1 2층｜營業時間：10:00–20:00（15:00–16:00 休息，19:30 最後點餐）。",
+        note: "韓文店名：술고당",
+        place: place("Sulgodang Busan", "술고당"),
       },
       {
         time: "13:00 — 15:00",
@@ -282,6 +318,7 @@ const days: Day[] = [
     tabLabel: "準備返台",
     title: "早午餐補貨・返台",
     subtitle: "不慌不忙地收好行李，也把最後一點釜山日常裝進記憶。",
+    photos: [photos.hotel, photos.airport],
     stops: [
       {
         time: "10:00 — 11:15",
@@ -344,11 +381,26 @@ export default function Home() {
   const [activeDay, setActiveDay] = useState(0);
   const [expanded, setExpanded] = useState<string>("0-0");
   const [shareStatus, setShareStatus] = useState("分享行程");
+  const [selectedPhoto, setSelectedPhoto] = useState<TripPhoto | null>(null);
   const day = days[activeDay];
+
+  useEffect(() => {
+    if (!selectedPhoto) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedPhoto(null);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [selectedPhoto]);
 
   const selectDay = (index: number) => {
     setActiveDay(index);
     setExpanded(`${index}-0`);
+    setSelectedPhoto(null);
     document.querySelector("#day-detail")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -399,6 +451,20 @@ export default function Home() {
         <div><span>03</span><p>回程航班</p><b>BX791</b><small>PUS 14:15 → TPE 15:50</small></div>
       </section>
 
+      <section className="stay-card" aria-labelledby="stay-title">
+        <button className="stay-visual" onClick={() => setSelectedPhoto(photos.hotel)} aria-label="放大住宿照片">
+          <img src={photos.hotel.src} alt={photos.hotel.alt} />
+          <span><b>04</b> NIGHTS · HAEUNDAE</span>
+        </button>
+        <div className="stay-copy">
+          <p className="eyebrow dark"><span /> OUR STAY</p>
+          <h2 id="stay-title">LCT Residence<br /><em>Y collection</em></h2>
+          <p>我們在海雲台的落腳處。入住後可先熟悉周邊，Day 2、Day 3 的海岸行程也更好銜接。</p>
+          <address>30 Dalmaji-gil, Haeundae-gu, Busan</address>
+          <MapButtons item={hotelPlace} />
+        </div>
+      </section>
+
       <section className="itinerary-shell" id="itinerary">
         <header className="section-heading reveal">
           <div>
@@ -424,6 +490,16 @@ export default function Home() {
         </div>
 
         <article className="day-detail" id="day-detail" key={day.number}>
+          <div className={`day-gallery count-${day.photos.length}`} aria-label={`${day.short} 景點照片`}>
+            {day.photos.map((photo, index) => (
+              <button className={`gallery-card photo-${index + 1}`} key={photo.src} onClick={() => setSelectedPhoto(photo)} aria-label={`放大照片：${photo.caption}`}>
+                <img src={photo.src} alt={photo.alt} loading={activeDay === 0 ? "eager" : "lazy"} />
+                <span className="gallery-shade" />
+                <span className="gallery-caption"><small>{String(index + 1).padStart(2, "0")}</small>{photo.caption}<b>↗</b></span>
+              </button>
+            ))}
+          </div>
+
           <aside className="day-sidebar">
             <div className="day-heading">
               <span>{day.number}</span>
@@ -493,7 +569,22 @@ export default function Home() {
         <div className="footer-mark">BUSAN <em>釜山</em></div>
         <div className="footer-meta"><p>南屯團隊 · 2026 SUMMER JOURNEY</p><button onClick={shareTrip}>{shareStatus} ↗</button></div>
         <p className="disclaimer">行程與交通時間可能因天候、現場營運與路況調整；出發前請再次確認票券及店家資訊。</p>
+        <details className="photo-credits">
+          <summary>照片來源與授權</summary>
+          <div>
+            {photoCredits.map((photo) => <a href={photo.source} target="_blank" rel="noreferrer" key={photo.src}>{photo.caption} — {photo.credit}</a>)}
+          </div>
+        </details>
       </footer>
+      {selectedPhoto && (
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label={selectedPhoto.caption} onClick={() => setSelectedPhoto(null)}>
+          <button className="lightbox-close" onClick={() => setSelectedPhoto(null)} aria-label="關閉照片">×</button>
+          <figure onClick={(event) => event.stopPropagation()}>
+            <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
+            <figcaption><span>{selectedPhoto.caption}</span><a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a></figcaption>
+          </figure>
+        </div>
+      )}
       <a className="back-top" href="#top" aria-label="回到頁首">↑</a>
     </main>
   );
