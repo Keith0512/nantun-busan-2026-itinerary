@@ -19,6 +19,7 @@ type Stop = {
   note?: string;
   place?: MapPlace;
   alternate?: MapPlace;
+  photos?: TripPhoto[];
 };
 type Day = {
   number: string;
@@ -59,6 +60,10 @@ const photos = {
   gamcheon: { src: "/places/gamcheon.jpg", alt: "甘川洞文化村的彩色山城住宅", caption: "甘川洞的彩色山城", credit: "Bernard Gagnon · CC0", source: "https://commons.wikimedia.org/wiki/File:Gamcheon_Culture_Village.jpg" },
   huinnyeoul: { src: "/places/huinnyeoul.jpg", alt: "白淺灘文化村沿海坡道與城市海景", caption: "白淺灘文化村的海岸散步", credit: "Choi2451 · CC0", source: "https://commons.wikimedia.org/wiki/File:Huinnyeoul_culture_village,_Busan_on_October_25th,_2019.jpg" },
   jagalchi: { src: "/places/jagalchi.jpg", alt: "札嘎其市場內販售新鮮海產的攤位", caption: "札嘎其市場的熱鬧海味", credit: "Bernard Gagnon · CC0", source: "https://commons.wikimedia.org/wiki/File:Jagalchi_Market_01.jpg" },
+  porkSoup: { src: "/places/pork-soup.jpg", alt: "一碗釜山豬肉湯飯與白飯、泡菜小菜", caption: "深夜暖胃的釜山豬肉湯飯", credit: "CYAN · CC BY-SA 4.0", source: "https://commons.wikimedia.org/wiki/File:Dwaeji_Gukbap_a0.jpg" },
+  pajeon: { src: "/places/pajeon.jpg", alt: "放在黃色餐盤上的韓式海鮮煎餅", caption: "青沙浦的海鮮煎餅", credit: "Adonis Chen · CC BY 2.0", source: "https://commons.wikimedia.org/wiki/File:Korean_pancake-Haemul_pajeon-01.jpg" },
+  songdo: { src: "/places/songdo.jpg", alt: "晴天下的釜山松島海灘與城市天際線", caption: "從纜車俯瞰的松島海岸", credit: "Michiel1972 · CC BY-SA 3.0", source: "https://commons.wikimedia.org/wiki/File:Busan_-_Songdo_beach.jpg" },
+  koreanHomeMeal: { src: "/places/korean-home-meal.jpg", alt: "韓式家常套餐與多樣小菜", caption: "述古堂的韓式家常料理氛圍", credit: "Ina Woo · CC BY-SA 4.0 · 示意照片", source: "https://commons.wikimedia.org/wiki/File:Rotary_Korean_Traditional_Set_Menu.jpg" },
 } satisfies Record<string, TripPhoto>;
 
 const photoCredits = Object.values(photos);
@@ -89,6 +94,7 @@ const days: Day[] = [
         title: "抵達釜山金海機場 PUS",
         summary: "入境、領行李，正式踏上釜山。",
         detail: "金海機場距離市區不遠，領取行李後可先準備少量韓元，方便搭車或便利商店消費。",
+        photos: [photos.airport],
         place: place("Gimhae International Airport", "김해국제공항"),
       },
       {
@@ -104,6 +110,7 @@ const days: Day[] = [
         title: "LCT Residence Y collection",
         summary: "前往海雲台飯店，辦理入住、稍作整理。",
         detail: "住宿位於 LCT Residence，地址為 30 Dalmaji-gil, Haeundae-gu, Busan。第一晚不排滿，先熟悉周邊與隔天集合方式。",
+        photos: [photos.hotel],
         note: "訂房頁標示：B4, LCT Residence",
         place: hotelPlace,
       },
@@ -113,6 +120,7 @@ const days: Day[] = [
         title: "晚餐與宵夜自理",
         summary: "豬肉湯飯、韓式炸雞，或便利商店小巡禮。",
         detail: "釜山豬肉湯飯是當地代表美食。深夜選飯店附近、步行可達的餐廳最輕鬆，也替第二天保留精神。",
+        photos: [photos.porkSoup],
         place: place("pork soup Busan", "부산 돼지국밥", "附近豬肉湯飯"),
       },
     ],
@@ -133,6 +141,7 @@ const days: Day[] = [
         title: "Skyline Luge Busan",
         summary: "自己控制滑車速度，享受海景與山景。",
         detail: "刺激度親切、適合朋友與親子同樂。戶外行程建議穿著方便活動的鞋，並做好防曬。",
+        photos: [photos.haeundae],
         place: place("Skyline Luge Busan", "스카이라인루지 부산"),
       },
       {
@@ -141,6 +150,7 @@ const days: Day[] = [
         title: "樂天百貨・午餐與逛街",
         summary: "美食街、品牌商店、咖啡與伴手禮一次完成。",
         detail: "安排兩小時用餐與休息，也能補齊韓國保養品、服飾及旅程所需用品。",
+        photos: [photos.haeundae],
         place: place("Lotte Mall Dongbusan", "롯데몰 동부산점"),
       },
       {
@@ -149,6 +159,7 @@ const days: Day[] = [
         title: "海東龍宮寺",
         summary: "海浪、岩岸與寺廟交織的釜山代表風景。",
         detail: "建築沿海邊岩石展開，與常見的山中寺廟截然不同。階梯較多，預留拍照與慢走時間。",
+        photos: [photos.temple],
         note: "建議從市區搭計程車前往",
         place: place("Haedong Yonggungsa Temple", "해동용궁사"),
       },
@@ -158,6 +169,7 @@ const days: Day[] = [
         title: "海雲台海岸列車",
         summary: "沿海岸線前進，在傍晚收藏海景與小站。",
         detail: "海岸列車節奏比天空膠囊快，沿途可看見岩岸、海面與特色小站；搭乘方向依實際票券為準。",
+        photos: [photos.capsule],
         place: place("Haeundae Beach Train Mipo Station", "해운대 해변열차 미포정거장"),
       },
       {
@@ -166,6 +178,7 @@ const days: Day[] = [
         title: "伍班長烤肉 或 83獬",
         summary: "依當晚距離與候位情況，彈性選擇多人聚餐。",
         detail: "伍班長氣氛熱鬧，適合想大口吃韓式烤肉的晚上；83獬則作為另一個彈性選項。",
+        photos: [photos.bbq],
         place: place("Obanjang Busan", "오반장 부산", "伍班長烤肉"),
         alternate: place("83 Hae Busan", "83해치 부산", "83獬"),
       },
@@ -187,6 +200,7 @@ const days: Day[] = [
         title: "海雲台母韓牛",
         summary: "細緻油花與香氣，是這趟旅程的美食重點。",
         detail: "午餐吃韓牛，下午銜接海雲台與青沙浦最順。熱門時段建議提早訂位。",
+        photos: [photos.bbq],
         place: place("Haeundae Amso Galbijip", "해운대암소갈비집"),
       },
       {
@@ -195,6 +209,7 @@ const days: Day[] = [
         title: "海雲台自由活動",
         summary: "海灘散步、咖啡、逛街或補貨，留一段自己的時間。",
         detail: "海雲台周邊有海灘步道、商店、咖啡廳與高樓海景。請記得在 15:40 前抵達尾浦站。",
+        photos: [photos.haeundae],
         place: place("Haeundae Beach", "해운대해수욕장"),
       },
       {
@@ -203,6 +218,7 @@ const days: Day[] = [
         title: "抵達尾浦站",
         summary: "提早集合，預留拍照、排隊與確認票券時間。",
         detail: "尾浦站是天空膠囊熱門起點。確認搭乘人數與 QR Code，別把時間卡得太剛好。",
+        photos: [photos.capsule],
         place: place("Mipo Station Haeundae Blue Line Park", "해운대블루라인파크 미포정거장"),
       },
       {
@@ -211,6 +227,7 @@ const days: Day[] = [
         title: "天空膠囊｜尾浦 → 青沙浦",
         summary: "小巧彩色車廂沿高架軌道慢行，從高處看海。",
         detail: "車速不快，很適合拍照與錄影。靠海側視野佳，進站前可先整理好相機與手機。",
+        photos: [photos.capsule],
         place: place("Cheongsapo Station Haeundae Blue Line Park", "해운대블루라인파크 청사포정거장"),
       },
       {
@@ -219,6 +236,7 @@ const days: Day[] = [
         title: "海鮮煎餅・올바릇식당",
         summary: "外酥內香的海鮮煎餅，搭配青沙浦海景。",
         detail: "地址：부산 해운대구 청사포로58번길 83 1층｜電話：0507-1416-2566",
+        photos: [photos.pajeon],
         note: "可直接用 Naver Map 搜尋韓文店名",
         place: place("Olbareut Restaurant Cheongsapo", "올바릇식당 청사포점"),
       },
@@ -228,6 +246,7 @@ const days: Day[] = [
         title: "廣安里遊艇集合",
         summary: "以韓文搜尋集合點，讓司機更容易定位。",
         detail: "從青沙浦前往廣安里建議搭計程車，避免多次轉乘。19:00 集合，預留找碼頭與報到時間。",
+        photos: [photos.gwangan],
         note: "搜尋：광안리해양레포츠센터",
         place: place("Gwangalli Marine Leisure Sports Center", "광안리해양레포츠센터"),
       },
@@ -237,6 +256,7 @@ const days: Day[] = [
         title: "廣安里遊艇趴",
         summary: "海風、城市高樓與廣安大橋燈光的夜間高潮。",
         detail: "從海面看廣安大橋比岸上更有包圍感。海上風大，可帶薄外套並固定好帽子與隨身物品。",
+        photos: [photos.gwangan],
         place: place("Gwangalli Beach", "광안리해수욕장"),
       },
       {
@@ -245,6 +265,7 @@ const days: Day[] = [
         title: "廣安里散步＋消夜",
         summary: "沿沙灘散步，再用炸雞、海鮮或咖啡替夜晚收尾。",
         detail: "表演結束後自由續攤。岸邊夜景視野開闊，也適合拍團體照。",
+        photos: [photos.gwangan],
         place: place("Gwangalli Beach restaurants", "광안리 맛집"),
       },
     ],
@@ -265,6 +286,7 @@ const days: Day[] = [
         title: "從飯店出發",
         summary: "今日集中在南浦洞、甘川洞、松島與札嘎其一帶。",
         detail: "景點較多，穿好走的鞋並帶上防曬。行李留在飯店，輕裝移動最舒服。",
+        photos: [photos.hotel],
       },
       {
         time: "11:00 — 12:45",
@@ -272,6 +294,7 @@ const days: Day[] = [
         title: "述古堂 술고당・午餐",
         summary: "韓式家常料理，另有素食友善選擇。",
         detail: "地址：부산 중구 중구로24번길 11-1 2층｜營業時間：10:00–20:00（15:00–16:00 休息，19:30 最後點餐）。",
+        photos: [photos.koreanHomeMeal],
         note: "韓文店名：술고당",
         place: place("Sulgodang Busan", "술고당"),
       },
@@ -281,6 +304,7 @@ const days: Day[] = [
         title: "甘川洞 或 DUF Coffee",
         summary: "依體力與天氣，在彩色山城散步或咖啡廳休息。",
         detail: "甘川洞以彩色房子、階梯巷弄與小王子拍照點聞名；若天氣炎熱，改到 DUF Coffee 看景放空更輕鬆。",
+        photos: [photos.gamcheon],
         place: place("Gamcheon Culture Village", "감천문화마을", "甘川洞文化村"),
         alternate: place("DUF Coffee Busan", "DUF COFFEE 부산", "DUF Coffee"),
       },
@@ -290,6 +314,7 @@ const days: Day[] = [
         title: "松島海上纜車",
         summary: "從高空俯瞰海岸、海面與城市輪廓。",
         detail: "若選水晶車廂，透明腳下視角更刺激。傍晚可能排隊，票券與回程方向請先確認。",
+        photos: [photos.songdo],
         place: place("Songdo Bay Station Busan Air Cruise", "송도해상케이블카 송도베이스테이션"),
       },
       {
@@ -298,6 +323,7 @@ const days: Day[] = [
         title: "白淺灘文化村",
         summary: "藍白聚落貼著峭壁與海岸線，傍晚最有電影感。",
         detail: "光線柔和時很適合拍夕陽與海景。巷弄有坡度與階梯，請保留散步時間。",
+        photos: [photos.huinnyeoul],
         place: place("Huinnyeoul Culture Village", "흰여울문화마을"),
       },
       {
@@ -306,6 +332,7 @@ const days: Day[] = [
         title: "札嘎其市場",
         summary: "螃蟹、貝類、生魚片與海鮮鍋，最後一晚大口吃海味。",
         detail: "市場氣氛熱鬧，適合先看食材再決定餐廳。點餐前可確認價格、份量與料理方式。",
+        photos: [photos.jagalchi],
         place: place("Jagalchi Market", "자갈치시장"),
       },
     ],
@@ -326,6 +353,7 @@ const days: Day[] = [
         title: "退房・附近早午餐",
         summary: "簡單吃、最後補貨，避免帶著行李跑太遠。",
         detail: "確認護照、行李與免稅提貨單。把握附近散步時間，11:15 前準時集合出發。",
+        photos: [photos.hotel],
       },
       {
         time: "11:15 — 12:00",
@@ -333,6 +361,7 @@ const days: Day[] = [
         title: "前往釜山金海機場",
         summary: "保留交通緩衝，避免塞車或臨時狀況。",
         detail: "團體移動請確認車輛與行李數量，抵達機場後先找釜山航空櫃檯。",
+        photos: [photos.airport],
         place: place("Gimhae International Airport", "김해국제공항"),
       },
       {
@@ -471,7 +500,7 @@ export default function Home() {
             <p className="eyebrow dark"><span /> OUR JOURNEY</p>
             <h2>旅程，一天一天展開。</h2>
           </div>
-          <p className="section-intro">點選日期切換每日行程，展開卡片看完整提醒；<br />有地點的行程可直接開啟導航。</p>
+          <p className="section-intro">點選日期切換每日行程，展開卡片看照片與完整提醒；<br />有地點的行程可直接開啟導航。</p>
         </header>
 
         <div className="day-tabs" role="tablist" aria-label="選擇行程日期">
@@ -531,6 +560,16 @@ export default function Home() {
                     </button>
                     <div className="event-extra" aria-hidden={!isExpanded}>
                       <p>{stop.detail}</p>
+                      {stop.photos && (
+                        <div className={`stop-photos count-${stop.photos.length}`} aria-label={`${stop.title}相關照片`}>
+                          {stop.photos.map((photo) => (
+                            <button className="stop-photo" key={photo.src} onClick={() => setSelectedPhoto(photo)} aria-label={`放大照片：${photo.caption}`}>
+                              <img src={photo.src} alt={photo.alt} loading="lazy" />
+                              <span>{photo.caption}<b>↗</b></span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
                       {stop.note && <p className="note"><span>NOTE</span>{stop.note}</p>}
                       {(stop.place || stop.alternate) && (
                         <div className="map-actions">
@@ -577,9 +616,9 @@ export default function Home() {
         </details>
       </footer>
       {selectedPhoto && (
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label={selectedPhoto.caption} onClick={() => setSelectedPhoto(null)}>
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label={selectedPhoto.caption}>
           <button className="lightbox-close" onClick={() => setSelectedPhoto(null)} aria-label="關閉照片">×</button>
-          <figure onClick={(event) => event.stopPropagation()}>
+          <figure>
             <img src={selectedPhoto.src} alt={selectedPhoto.alt} />
             <figcaption><span>{selectedPhoto.caption}</span><a href={selectedPhoto.source} target="_blank" rel="noreferrer">{selectedPhoto.credit} ↗</a></figcaption>
           </figure>
