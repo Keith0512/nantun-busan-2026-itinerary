@@ -379,6 +379,8 @@ Redesign 應保留大圖、深綠與暖色紙張感，轉化為更成熟的韓�
 
   ![Busan Pocket Guide](design-concepts/option-2-busan-pocket-guide.png)
 
+  **Selected direction:** 使用者於 2026-08-22 選定方案 2；實作以這組 Pocket Guide 視覺語言、行程密度與 mobile-first 導覽為準。
+
 - **Quiet Korean Luxury**：克制留白、朱紅細節、精緻排版與小面積海洋色，最安靜高級。
 
   ![Quiet Korean Luxury](design-concepts/option-3-quiet-korean-luxury.png)
