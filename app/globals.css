@@ -98,14 +98,14 @@ summary:focus-visible {
   font-weight: 500;
 }
 
-.nav-actions, .share-button, .nav-pill {
+.nav-actions, .install-button, .share-button, .nav-pill {
   display: flex;
   align-items: center;
 }
 
 .nav-actions { gap: 10px; }
 
-.share-button, .nav-pill {
+.install-button, .share-button, .nav-pill {
   min-height: 44px;
   gap: 9px;
   border-radius: 999px;
@@ -114,17 +114,26 @@ summary:focus-visible {
   text-decoration: none;
 }
 
-.share-button {
+.install-button, .share-button {
   border: 1px solid var(--line);
   padding: 0 17px;
   background: rgba(255, 253, 248, 0.76);
   cursor: pointer;
 }
 
+.install-button {
+  border-color: transparent;
+  background: var(--sea);
+  color: white;
+}
+
+.install-button img,
 .share-button img, .nav-pill img, .footer-meta img, .day-switcher img {
   width: 16px;
   height: 16px;
 }
+
+.install-button img { filter: brightness(0) invert(1); }
 
 .nav-pill {
   padding: 0 18px;
@@ -134,13 +143,13 @@ summary:focus-visible {
 
 .nav-pill img, .footer-meta img { filter: brightness(0) invert(1); }
 
-.share-button, .nav-pill, .day-tab, .event-main, .map-btn,
+.install-button, .share-button, .nav-pill, .day-tab, .event-main, .map-btn,
 .day-switcher button, .back-top {
   transition: transform 180ms ease, background-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
 }
 
 @media (hover: hover) {
-  .share-button:hover, .nav-pill:hover, .map-btn:hover,
+  .install-button:hover, .share-button:hover, .nav-pill:hover, .map-btn:hover,
   .day-switcher button:not(:disabled):hover { transform: translateY(-2px); }
   .nav-pill:hover { background: var(--sea-deep); }
 }
@@ -994,8 +1003,8 @@ footer { padding: 86px 0 32px; background: var(--forest-deep); color: white; }
   .topbar { min-height: 68px; }
   .brand-word { font-size: 21px; }
   .brand-korean { font-size: 11px; }
-  .share-button { width: 44px; justify-content: center; padding: 0; }
-  .share-button span {
+  .install-button, .share-button { width: 44px; justify-content: center; padding: 0; }
+  .install-button span, .share-button span {
     position: absolute;
     width: 1px;
     height: 1px;

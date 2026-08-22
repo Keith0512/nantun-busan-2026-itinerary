@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Noto_Serif_TC } from "next/font/google";
 import "./globals.css";
+import PwaRegister from "./pwa-register";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,8 +16,15 @@ const notoSerif = Noto_Serif_TC({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nantun-busan-2026.mars0512.chatgpt.site"),
+  applicationName: "BUSAN 2026",
   title: "南屯團隊｜釜山 5天4夜",
   description: "2026 釜山 5天4夜互動旅遊行程，景點、美食與導航一次整理。",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "BUSAN 2026",
+  },
   openGraph: {
     title: "南屯團隊｜BUSAN 2026",
     description: "5 DAYS · 4 NIGHTS｜釜山互動旅遊行程",
@@ -31,9 +39,18 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
+    icon: [
+      { url: "/pwa/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/pwa/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    shortcut: "/pwa/icon-192.png",
+    apple: [{ url: "/pwa/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
+};
+
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#164B3C",
 };
 
 export default function RootLayout({
@@ -47,6 +64,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${notoSerif.variable} antialiased`}
       >
         {children}
+        <PwaRegister />
       </body>
     </html>
   );

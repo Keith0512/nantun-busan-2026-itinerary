@@ -39,6 +39,11 @@ type Day = {
   stops: Stop[];
 };
 
+type InstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
+
 const googleMap = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 const naverMap = (query: string) =>
@@ -426,6 +431,7 @@ export default function Home() {
   const [expanded, setExpanded] = useState<string>("0-0");
   const [shareStatus, setShareStatus] = useState("分享行程");
   const [selectedPhoto, setSelectedPhoto] = useState<TripPhoto | null>(null);
+  const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const photoTriggerRef = useRef<HTMLButtonElement | null>(null);
   const day = days[activeDay];
@@ -462,6 +468,21 @@ export default function Home() {
       photoTriggerRef.current?.focus();
     };
   }, [selectedPhoto]);
+
+  useEffect(() => {
+    const captureInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+    };
+    const clearInstallPrompt = () => setInstallPrompt(null);
+
+    window.addEventListener("beforeinstallprompt", captureInstallPrompt);
+    window.addEventListener("appinstalled", clearInstallPrompt);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", captureInstallPrompt);
+      window.removeEventListener("appinstalled", clearInstallPrompt);
+    };
+  }, []);
 
   const openPhoto = (photo: TripPhoto, event: ReactMouseEvent<HTMLButtonElement>) => {
     photoTriggerRef.current = event.currentTarget;
@@ -506,6 +527,13 @@ export default function Home() {
     }
   };
 
+  const installApp = async () => {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  };
+
   return (
     <main>
       <header className="site-header" id="top">
@@ -515,6 +543,12 @@ export default function Home() {
             <span className="brand-korean">釜山 2026</span>
           </a>
           <div className="nav-actions">
+            {installPrompt && (
+              <button className="install-button" onClick={installApp}>
+                <img src="/icons/download-simple.svg" alt="" />
+                <span>安裝 App</span>
+              </button>
+            )}
             <button className="share-button" onClick={shareTrip} aria-label={shareStatus}>
               <img src="/icons/share-network.svg" alt="" />
               <span aria-live="polite">{shareStatus}</span>
