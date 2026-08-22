@@ -28,6 +28,21 @@ npm run dev
 npm run build
 ```
 
+## Vercel 部署
+
+專案已包含 Vercel 所需的 Nitro 建置設定。從 Vercel 控制台匯入本 GitHub 倉庫即可；`vercel.json` 會使用專案內建的 Vercel 建置命令。
+
+1. 在 Vercel 選擇 **Add New → Project**。
+2. 匯入 `Keith0512/nantun-busan-2026-itinerary`。
+3. Root Directory 保持專案根目錄，其他建置設定使用倉庫預設值。
+4. 按下 **Deploy**。
+
+本機驗證 Vercel 建置：
+
+```bash
+npm run build:vercel
+```
+
 ## 技術
 
 - React 19
