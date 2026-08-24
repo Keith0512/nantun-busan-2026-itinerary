@@ -585,15 +585,15 @@ export default function Home() {
             <span>2026.08.27 — 08.31</span>
             <span>BUSAN · KOREA</span>
           </div>
-        </div>
-        <div className="hero-intro">
-          <div>
-            <p className="eyebrow dark">SUMMER POCKET GUIDE</p>
-            <h1 id="hero-title">釜山，<em>五日。</em></h1>
-          </div>
-          <div className="hero-summary">
-            <p>海岸、城市與夏日的美味記憶，整理成一份隨身好讀的旅遊手冊。</p>
-            <a href="#itinerary">開始閱讀 <img src="/icons/arrow-down.svg" alt="" /></a>
+          <div className="hero-intro">
+            <div className="hero-heading">
+              <p className="eyebrow">SUMMER POCKET GUIDE</p>
+              <h1 id="hero-title">釜山，<em>五日。</em></h1>
+            </div>
+            <div className="hero-summary">
+              <p>海岸、城市與夏日的美味記憶，整理成一份隨身好讀的旅遊手冊。</p>
+              <a href="#itinerary">開始閱讀 <img src="/icons/arrow-down.svg" alt="" /></a>
+            </div>
           </div>
         </div>
       </section>
@@ -610,8 +610,14 @@ export default function Home() {
           <span><b>04</b> NIGHTS · HAEUNDAE</span>
         </button>
         <div className="stay-copy">
-          <p className="eyebrow dark">OUR STAY</p>
-          <h2 id="stay-title">LCT Residence<br /><em>Y collection</em></h2>
+          <div className="stay-badges">
+            <p className="eyebrow">OUR STAY</p>
+            <span>HAEUNDAE · BUSAN</span>
+          </div>
+          <h2 id="stay-title">
+            <span className="stay-name-badge">LCT Residence</span>
+            <em>Y collection</em>
+          </h2>
           <p>我們在海雲台的落腳處。入住後可先熟悉周邊，Day 2、Day 3 的海岸行程也更好銜接。</p>
           <address>30 Dalmaji-gil, Haeundae-gu, Busan</address>
           <MapButtons item={hotelPlace} />
