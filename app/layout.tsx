@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Noto_Serif_TC } from "next/font/google";
+import { Cormorant_Garamond, Geist, Noto_Sans_TC } from "next/font/google";
 import "./globals.css";
 import PwaRegister from "./pwa-register";
 
@@ -8,10 +8,16 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const notoSerif = Noto_Serif_TC({
-  variable: "--font-noto-serif-tc",
-  weight: ["400", "500", "600"],
+const notoSans = Noto_Sans_TC({
+  variable: "--font-noto-sans-tc",
+  weight: ["400", "500", "600", "700"],
   preload: false,
+});
+
+const editorialSerif = Cormorant_Garamond({
+  variable: "--font-editorial-serif",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -50,7 +56,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: "light",
-  themeColor: "#164B3C",
+  themeColor: "#082F49",
 };
 
 export default function RootLayout({
@@ -61,7 +67,7 @@ export default function RootLayout({
   return (
     <html lang="zh-Hant">
       <body
-        className={`${geistSans.variable} ${notoSerif.variable} antialiased`}
+        className={`${geistSans.variable} ${notoSans.variable} ${editorialSerif.variable} antialiased`}
       >
         {children}
         <PwaRegister />

@@ -411,6 +411,16 @@ const days: Day[] = [
   },
 ];
 
+const foodTags = new Set([
+  "DINNER",
+  "HANWOO",
+  "LATE BITE",
+  "LUNCH",
+  "MARKET DINNER",
+  "SEAFOOD",
+  "SHOP & EAT",
+]);
+
 function MapButtons({ item }: { item: MapPlace }) {
   return (
     <div className="map-group" aria-label={`${item.label ?? "地點"}導航`}>
@@ -664,7 +674,7 @@ export default function Home() {
                       aria-controls={panelId}
                     >
                       <span className="event-copy">
-                        <span className="tag">{stop.tag}</span>
+                        <span className={foodTags.has(stop.tag) ? "tag food-tag" : "tag"}>{stop.tag}</span>
                         <strong>{stop.title}</strong>
                         <span>{stop.summary}</span>
                       </span>
