@@ -9,6 +9,11 @@ import {
 } from "react";
 
 import { uberRide } from "./uber-link";
+import {
+  checklistGroups,
+  checklistStorageKey,
+  readChecklistSelection,
+} from "./travel-checklist";
 
 type MapPlace = { label?: string; google: string; naver: string; uber: string };
 type TripPhoto = {
@@ -447,8 +452,11 @@ function MapButtons({ item }: { item: MapPlace }) {
 }
 
 export default function Home() {
+  const [plannerView, setPlannerView] = useState<"itinerary" | "checklist">("itinerary");
   const [activeDay, setActiveDay] = useState(0);
   const [expanded, setExpanded] = useState<string>("0-0");
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checklistReady, setChecklistReady] = useState(false);
   const [shareStatus, setShareStatus] = useState("分享行程");
   const [selectedPhoto, setSelectedPhoto] = useState<TripPhoto | null>(null);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
@@ -456,6 +464,29 @@ export default function Home() {
   const photoTriggerRef = useRef<HTMLButtonElement | null>(null);
   const day = days[activeDay];
   const routeCover = activeDay === 2 ? photos.hotel : day.photos[0];
+  const checklistTotal = checklistGroups.reduce((total, group) => total + group.items.length, 0);
+  const checklistProgress = Math.round((checkedItems.length / checklistTotal) * 100);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        setCheckedItems(readChecklistSelection(window.localStorage.getItem(checklistStorageKey)));
+      } catch {
+        setCheckedItems([]);
+      }
+      setChecklistReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    if (!checklistReady) return;
+    try {
+      window.localStorage.setItem(checklistStorageKey, JSON.stringify(checkedItems));
+    } catch {
+      // The checklist still works for this visit when device storage is unavailable.
+    }
+  }, [checkedItems, checklistReady]);
 
   useEffect(() => {
     if (!selectedPhoto) return;
@@ -520,6 +551,19 @@ export default function Home() {
     }
   };
 
+  const showPlannerView = (view: "itinerary" | "checklist") => {
+    setPlannerView(view);
+    window.requestAnimationFrame(() => {
+      document.querySelector("#itinerary")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
+
+  const toggleChecklistItem = (id: string) => {
+    setCheckedItems((current) => (
+      current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
+    ));
+  };
+
   const handleDayKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
     const last = days.length - 1;
     let next = index;
@@ -573,9 +617,29 @@ export default function Home() {
               <img src="/icons/share-network.svg" alt="" />
               <span aria-live="polite">{shareStatus}</span>
             </button>
-            <a className="nav-pill" href="#itinerary">
-              查看行程 <img src="/icons/arrow-down.svg" alt="" />
-            </a>
+            <button
+              className={plannerView === "checklist" ? "nav-pill checklist-nav active" : "nav-pill checklist-nav"}
+              type="button"
+              aria-label="出發前檢查事項"
+              aria-pressed={plannerView === "checklist"}
+              aria-controls="checklist-view"
+              onClick={() => showPlannerView("checklist")}
+            >
+              <span className="nav-label-full">出發前檢查事項</span>
+              <span className="nav-label-short">行前清單</span>
+            </button>
+            <button
+              className={plannerView === "itinerary" ? "nav-pill itinerary-nav active" : "nav-pill itinerary-nav"}
+              type="button"
+              aria-label="查看行程"
+              aria-pressed={plannerView === "itinerary"}
+              aria-controls="itinerary-view"
+              onClick={() => showPlannerView("itinerary")}
+            >
+              <span className="nav-label-full">查看行程</span>
+              <span className="nav-label-short">行程</span>
+              <img src="/icons/arrow-down.svg" alt="" />
+            </button>
           </div>
         </nav>
       </header>
@@ -594,7 +658,7 @@ export default function Home() {
             </div>
             <div className="hero-summary">
               <p>海岸、城市與夏日的美味記憶，整理成一份隨身好讀的旅遊手冊。</p>
-              <a href="#itinerary">開始閱讀 <img src="/icons/arrow-down.svg" alt="" /></a>
+              <a href="#itinerary" onClick={() => setPlannerView("itinerary")}>開始閱讀 <img src="/icons/arrow-down.svg" alt="" /></a>
             </div>
           </div>
         </div>
@@ -626,7 +690,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="itinerary-shell" id="itinerary" aria-labelledby="itinerary-title">
+      <section
+        className={`itinerary-shell ${plannerView === "checklist" ? "checklist-mode" : ""}`}
+        id="itinerary"
+        aria-labelledby={plannerView === "itinerary" ? "itinerary-title" : "checklist-title"}
+      >
+        {plannerView === "itinerary" ? (
+        <div id="itinerary-view">
         <div className="itinerary-cover shell">
           <img src={routeCover.src} alt={routeCover.alt} />
           <span>{day.weekday} · {day.date}</span>
@@ -749,6 +819,72 @@ export default function Home() {
             後一天 <img src="/icons/arrow-right.svg" alt="" />
           </button>
         </div>
+        </div>
+        ) : (
+          <div className="checklist-view shell" id="checklist-view">
+            <header className="checklist-header">
+              <div>
+                <p className="eyebrow dark">BEFORE YOU GO</p>
+                <h2 id="checklist-title">旅行檢查清單</h2>
+                <p>依照 2026 釜山五天四夜行程整理。勾選紀錄只會儲存在目前這台裝置。</p>
+              </div>
+              <div className="checklist-progress" aria-live="polite">
+                <span><strong>{checkedItems.length}</strong> / {checklistTotal} 已準備</span>
+                <div
+                  className="checklist-progress-track"
+                  role="progressbar"
+                  aria-label="行前準備進度"
+                  aria-valuemin={0}
+                  aria-valuemax={checklistTotal}
+                  aria-valuenow={checkedItems.length}
+                >
+                  <span style={{ width: `${checklistProgress}%` }} />
+                </div>
+              </div>
+            </header>
+
+            <div className="checklist-groups">
+              {checklistGroups.map((group, groupIndex) => (
+                <section className="checklist-group" key={group.title} aria-labelledby={`checklist-group-${groupIndex}`}>
+                  <header>
+                    <span>{String(groupIndex + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3 id={`checklist-group-${groupIndex}`}>{group.title}</h3>
+                      <p>{group.subtitle}</p>
+                    </div>
+                  </header>
+                  <ul>
+                    {group.items.map((item) => {
+                      const isChecked = checkedItems.includes(item.id);
+                      return (
+                        <li className={isChecked ? "is-checked" : ""} key={item.id}>
+                          <label htmlFor={`checklist-${item.id}`}>
+                            <input
+                              id={`checklist-${item.id}`}
+                              type="checkbox"
+                              checked={isChecked}
+                              aria-label={`${item.title}，準備好了`}
+                              onChange={() => toggleChecklistItem(item.id)}
+                            />
+                            <span className="checklist-copy">
+                              <strong>{item.title}</strong>
+                              <span>{item.detail}</span>
+                            </span>
+                          </label>
+                          {item.href && (
+                            <a href={item.href} target="_blank" rel="noreferrer">
+                              {item.linkLabel}<img src="/icons/arrow-square-out.svg" alt="" />
+                            </a>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="travel-notes">
