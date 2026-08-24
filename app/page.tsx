@@ -425,16 +425,18 @@ function MapButtons({ item }: { item: MapPlace }) {
   return (
     <div className="map-group" aria-label={`${item.label ?? "地點"}導航`}>
       {item.label && <span className="map-label">{item.label}</span>}
-      <a className="map-btn google" href={item.google} target="_blank" rel="noreferrer" aria-label="使用 Google Maps 開啟">
-        <span className="map-icon"><img src="/icons/google-maps.svg" alt="" /></span>
-        <span>Google Maps</span>
-        <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
-      </a>
-      <a className="map-btn naver" href={item.naver} target="_blank" rel="noreferrer" aria-label="使用 Naver Map 開啟">
-        <span className="map-icon"><img src="/icons/naver.svg" alt="" /></span>
-        <span>Naver Map</span>
-        <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
-      </a>
+      <div className="map-native-pair">
+        <a className="map-btn google" href={item.google} target="_blank" rel="noreferrer" aria-label="使用 Google Maps 開啟">
+          <span className="map-icon"><img src="/icons/google-maps.svg" alt="" /></span>
+          <span>Google Maps</span>
+          <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
+        </a>
+        <a className="map-btn naver" href={item.naver} target="_blank" rel="noreferrer" aria-label="使用 Naver Map 開啟">
+          <span className="map-icon"><img src="/icons/naver.svg" alt="" /></span>
+          <span>Naver Map</span>
+          <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
+        </a>
+      </div>
       <a className="map-btn uber" href={item.uber} target="_blank" rel="noreferrer" aria-label="使用 Uber 開啟叫車並設定目的地">
         <span className="map-icon" aria-hidden="true"><span className="uber-wordmark">Uber</span></span>
         <span>Uber 叫車</span>
@@ -651,7 +653,7 @@ export default function Home() {
               onClick={() => selectDay(index)}
               onKeyDown={(event) => handleDayKeyDown(event, index)}
             >
-              <b>{tab.short}</b><span>{tab.date}</span><small>{tab.tabLabel}</small><i aria-hidden="true" />
+              <b>{tab.short}</b><span>{tab.date}</span><small>{tab.tabLabel}</small>
             </button>
           ))}
         </div>
@@ -670,8 +672,6 @@ export default function Home() {
               const panelId = `event-${activeDay}-${index}`;
               return (
                 <div className={`timeline-item ${isExpanded ? "is-open" : ""}`} key={`${stop.time}-${stop.title}`}>
-                  <time>{stop.time}</time>
-                  <span className="timeline-dot" aria-hidden="true" />
                   <div className="event-card">
                     <button
                       className="event-main"
@@ -680,7 +680,10 @@ export default function Home() {
                       aria-controls={panelId}
                     >
                       <span className="event-copy">
-                        <span className={foodTags.has(stop.tag) ? "tag food-tag" : "tag"}>{stop.tag}</span>
+                        <span className="event-meta">
+                          <time>{stop.time}</time>
+                          <span className={foodTags.has(stop.tag) ? "tag food-tag" : "tag"}>{stop.tag}</span>
+                        </span>
                         <strong>{stop.title}</strong>
                         <span>{stop.summary}</span>
                       </span>
