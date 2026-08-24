@@ -8,7 +8,9 @@ import {
   useState,
 } from "react";
 
-type MapPlace = { label?: string; google: string; naver: string };
+import { uberRide } from "./uber-link";
+
+type MapPlace = { label?: string; google: string; naver: string; uber: string };
 type TripPhoto = {
   src: string;
   alt: string;
@@ -51,6 +53,7 @@ const naverMap = (query: string) =>
 const place = (google: string, naver: string, label?: string): MapPlace => ({
   google: googleMap(google),
   naver: naverMap(naver),
+  uber: uberRide(label ?? google, `${naver} · ${google}`),
   label,
 });
 
@@ -420,6 +423,11 @@ function MapButtons({ item }: { item: MapPlace }) {
       <a className="map-btn naver" href={item.naver} target="_blank" rel="noreferrer" aria-label="使用 Naver Map 開啟">
         <span className="map-icon"><img src="/icons/naver.svg" alt="" /></span>
         <span>Naver Map</span>
+        <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
+      </a>
+      <a className="map-btn uber" href={item.uber} target="_blank" rel="noreferrer" aria-label="使用 Uber 開啟叫車並設定目的地">
+        <span className="map-icon" aria-hidden="true"><span className="uber-wordmark">Uber</span></span>
+        <span>Uber 叫車</span>
         <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
       </a>
     </div>

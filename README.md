@@ -1,6 +1,6 @@
 # 南屯團隊｜釜山 5 天 4 夜互動行程
 
-釜山五天四夜的行動版旅遊行程網站，以每日時間軸整理景點、美食、住宿與交通資訊，並提供 Google Maps 與 Naver Map 導航連結。
+釜山五天四夜的行動版旅遊行程網站，以每日時間軸整理景點、美食、住宿與交通資訊，並提供 Google Maps、Naver Map 與 Uber 叫車連結。
 
 網站：[nantun-busan-2026.mars0512.chatgpt.site](https://nantun-busan-2026.mars0512.chatgpt.site)
 
@@ -8,7 +8,7 @@
 
 - 五天行程分頁與前後日切換
 - 景點卡片、實景照片與點擊放大檢視
-- Google Maps、Naver Map 一鍵搜尋與導航
+- Google Maps、Naver Map 一鍵搜尋，以及 Uber 預設目的地叫車
 - 飯店、航班、集合時間及行前提醒
 - 適合手機、平板與桌面瀏覽的響應式版面
 - 分享行程與回到頁首等互動功能
