@@ -15,7 +15,7 @@ import {
   readChecklistSelection,
 } from "./travel-checklist";
 
-type MapPlace = { label?: string; google: string; naver: string; uber: string };
+type MapPlace = { label?: string; google: string; naver: string; uber?: string };
 type TripPhoto = {
   src: string;
   alt: string;
@@ -55,12 +55,45 @@ const googleMap = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 const naverMap = (query: string) =>
   `https://map.naver.com/p/search/${encodeURIComponent(query)}`;
-const place = (google: string, naver: string, label?: string): MapPlace => ({
-  google: googleMap(google),
-  naver: naverMap(naver),
-  uber: uberRide(label ?? google, naver),
-  label,
-});
+
+type Coordinates = readonly [latitude: number, longitude: number];
+
+const uberCoordinates: Record<string, Coordinates> = {
+  "부산 해운대구 달맞이길 30 엘시티 레지던스": [35.1598316, 129.1697374],
+  "타오위안 국제공항 제2터미널": [25.0775532, 121.2329991],
+  김해국제공항: [35.1800774, 128.9364014],
+  "스카이라인루지 부산": [35.1941296, 129.2191333],
+  "롯데몰 동부산점": [35.192307, 129.2125516],
+  해동용궁사: [35.1884335, 129.2229764],
+  "해운대 해변열차 미포정거장": [35.1581707, 129.1728278],
+  "오반장 부산": [35.1615634, 129.1593189],
+  해운대암소갈비집: [35.162933, 129.1662923],
+  해운대해수욕장: [35.1592859, 129.1586091],
+  "해운대블루라인파크 미포정거장": [35.1581707, 129.1728278],
+  "해운대블루라인파크 청사포정거장": [35.1612404, 129.1913814],
+  "올바릇식당 청사포점": [35.1615193, 129.1893975],
+  광안리해양레포츠센터: [35.1461934, 129.1153247],
+  광안리해수욕장: [35.1508879, 129.1167806],
+  술고당: [35.1000576, 129.0293113],
+  감천문화마을: [35.0963371, 129.0087897],
+  "DUF COFFEE 부산": [35.0962827, 129.0092705],
+  "송도해상케이블카 송도베이스테이션": [35.0763321, 129.0235399],
+  흰여울문화마을: [35.0773961, 129.0456513],
+  자갈치시장: [35.095744, 129.0251226],
+};
+
+const place = (google: string, naver: string, label?: string): MapPlace => {
+  const coordinates = uberCoordinates[naver];
+
+  return {
+    google: googleMap(google),
+    naver: naverMap(naver),
+    uber: coordinates
+      ? uberRide(label ?? google, naver, coordinates[0], coordinates[1])
+      : undefined,
+    label,
+  };
+};
 
 const hotelPlace = place(
   "LCT Residence Y collection Busan",
@@ -442,11 +475,13 @@ function MapButtons({ item }: { item: MapPlace }) {
           <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
         </a>
       </div>
-      <a className="map-btn uber" href={item.uber} target="_blank" rel="noreferrer" aria-label="使用 Uber 開啟叫車並設定目的地">
-        <span className="map-icon" aria-hidden="true"><span className="uber-wordmark">Uber</span></span>
-        <span>Uber 叫車</span>
-        <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
-      </a>
+      {item.uber && (
+        <a className="map-btn uber" href={item.uber} target="_blank" rel="noreferrer" aria-label="使用 Uber 開啟叫車並設定目的地">
+          <span className="map-icon" aria-hidden="true"><span className="uber-wordmark">Uber</span></span>
+          <span>Uber 叫車</span>
+          <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
+        </a>
+      )}
     </div>
   );
 }
