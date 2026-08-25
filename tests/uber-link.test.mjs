@@ -4,7 +4,8 @@ import test from "node:test";
 import { uberRide } from "../app/uber-link.ts";
 
 test("builds an Uber universal link with current pickup and destination", () => {
-  const link = new URL(uberRide("甘川洞文化村", "감천문화마을 · Gamcheon Culture Village"));
+  const url = uberRide("甘川洞文化村", "감천문화마을 · Gamcheon Culture Village");
+  const link = new URL(url);
 
   assert.equal(link.origin, "https://m.uber.com");
   assert.equal(link.pathname, "/ul/");
@@ -15,4 +16,9 @@ test("builds an Uber universal link with current pickup and destination", () => 
     link.searchParams.get("dropoff[formatted_address]"),
     "감천문화마을 · Gamcheon Culture Village",
   );
+  assert.match(url, /dropoff\[nickname\]=/);
+  assert.match(url, /dropoff\[formatted_address\]=/);
+  assert.match(url, /%20/);
+  assert.doesNotMatch(url, /dropoff%5B/);
+  assert.doesNotMatch(url, /\+/);
 });

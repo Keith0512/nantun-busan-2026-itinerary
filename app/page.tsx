@@ -58,7 +58,7 @@ const naverMap = (query: string) =>
 const place = (google: string, naver: string, label?: string): MapPlace => ({
   google: googleMap(google),
   naver: naverMap(naver),
-  uber: uberRide(label ?? google, `${naver} · ${google}`),
+  uber: uberRide(label ?? google, naver),
   label,
 });
 
