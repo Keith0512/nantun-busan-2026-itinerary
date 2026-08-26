@@ -78,7 +78,8 @@ a { color: inherit; }
 
 button:focus-visible,
 a:focus-visible,
-summary:focus-visible {
+summary:focus-visible,
+input:focus-visible {
   outline: 3px solid var(--color-accent-signal);
   outline-offset: 4px;
 }
@@ -590,9 +591,9 @@ summary:focus-visible {
   background: var(--color-bg-surface);
 }
 
-.checklist-view { animation: details-open 200ms cubic-bezier(0.2, 0, 0, 1) both; }
+.checklist-view, .currency-view { animation: details-open 200ms cubic-bezier(0.2, 0, 0, 1) both; }
 
-.checklist-header {
+.checklist-header, .currency-header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.36fr);
   align-items: end;
@@ -601,7 +602,7 @@ summary:focus-visible {
   border-bottom: 1px solid var(--color-border);
 }
 
-.checklist-header h2 {
+.checklist-header h2, .currency-header h2 {
   margin: 12px 0 14px;
   font-family: var(--font-body);
   font-size: clamp(48px, 6vw, 76px);
@@ -611,7 +612,8 @@ summary:focus-visible {
   text-wrap: balance;
 }
 
-.checklist-header > div:first-child > p:last-child {
+.checklist-header > div:first-child > p:last-child,
+.currency-header > div:first-child > p:last-child {
   max-width: 56ch;
   margin: 0;
   color: var(--color-text-secondary);
@@ -772,6 +774,300 @@ summary:focus-visible {
 }
 
 .checklist-group li > a img { width: 14px; height: 14px; opacity: 0.62; }
+
+.currency-rate-summary {
+  border-radius: 20px;
+  padding: 22px;
+  background: var(--color-accent-solid);
+  color: white;
+  box-shadow: var(--shadow-soft);
+}
+
+.currency-rate-summary > span,
+.currency-rate-summary > small,
+.currency-rate-summary > strong { display: block; }
+
+.currency-rate-summary > span {
+  margin-bottom: 7px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 9px;
+  font-weight: 720;
+  letter-spacing: 0.12em;
+}
+
+.currency-rate-summary > strong {
+  font-family: var(--font-editorial);
+  font-size: 34px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.currency-rate-summary > small {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.currency-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(280px, 0.58fr);
+  align-items: start;
+  gap: 28px;
+  margin-top: 54px;
+}
+
+.currency-calculator {
+  border-radius: 26px;
+  padding: 34px;
+  background: var(--color-bg-deep);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-raised);
+}
+
+.currency-card-label {
+  margin: 0 0 18px;
+  color: var(--sky-300);
+  font-family: var(--font-editorial);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.currency-amount-field,
+.currency-result {
+  border-radius: 19px;
+  padding: 22px 24px;
+}
+
+.currency-amount-field {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.currency-amount-field > label,
+.currency-result > span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 9px;
+  font-weight: 720;
+  letter-spacing: 0.1em;
+}
+
+.currency-amount-field > label { color: var(--color-text-secondary); }
+
+.currency-amount-field > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.currency-amount-field > div > span {
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: var(--color-accent-subtle);
+  color: var(--color-accent-text);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.currency-amount-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-editorial);
+  font-size: clamp(36px, 5vw, 54px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.currency-amount-field input:focus-visible { outline-offset: 6px; }
+
+.currency-amount-field > small {
+  display: block;
+  margin-top: 10px;
+  color: var(--color-text-secondary);
+  font-size: 9px;
+}
+
+.currency-swap {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px auto;
+  border: 1px solid var(--color-border-inverse);
+  border-radius: 999px;
+  padding: 0 15px;
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  font-size: 10px;
+  font-weight: 720;
+  cursor: pointer;
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.currency-swap svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.currency-result {
+  min-height: 154px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid rgba(125, 211, 252, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.currency-result > span { color: rgba(255, 255, 255, 0.6); }
+
+.currency-result output {
+  overflow-wrap: anywhere;
+  color: white;
+  font-family: var(--font-editorial);
+  font-size: clamp(39px, 6vw, 64px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+}
+
+.currency-result > small {
+  margin-top: 10px;
+  color: var(--sky-300);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.currency-settings {
+  border-radius: 22px;
+  padding: 28px;
+  background: white;
+  box-shadow: var(--shadow-border), var(--shadow-soft);
+}
+
+.currency-settings h3 {
+  margin: 10px 0 10px;
+  font-size: 22px;
+  font-weight: 680;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+}
+
+.currency-settings > p:not(.eyebrow):not(.exchange-rate-help) {
+  margin: 0 0 26px;
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  line-height: 1.75;
+}
+
+.currency-settings > label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-text-secondary);
+  font-size: 9px;
+  font-weight: 720;
+  letter-spacing: 0.08em;
+}
+
+.exchange-rate-field {
+  display: grid;
+  grid-template-columns: auto minmax(80px, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 9px 12px;
+  background: var(--color-bg-page);
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.exchange-rate-field:focus-within {
+  border-color: var(--color-accent-signal);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+}
+
+.exchange-rate-field.is-invalid { border-color: var(--color-note-solid); }
+
+.exchange-rate-field > span {
+  color: var(--color-text-secondary);
+  font-size: 9px;
+  font-weight: 720;
+}
+
+.exchange-rate-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-editorial);
+  font-size: 25px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: center;
+}
+
+.exchange-rate-field input:focus-visible { outline: 0; }
+
+.currency-amount-field input::-webkit-outer-spin-button,
+.currency-amount-field input::-webkit-inner-spin-button,
+.exchange-rate-field input::-webkit-outer-spin-button,
+.exchange-rate-field input::-webkit-inner-spin-button {
+  margin: 0;
+  appearance: none;
+}
+
+.currency-amount-field input[type="number"],
+.exchange-rate-field input[type="number"] { appearance: textfield; }
+
+.exchange-rate-help {
+  min-height: 18px;
+  margin: 7px 0 19px;
+  color: var(--color-accent-text);
+  font-size: 9px;
+}
+
+.exchange-rate-field.is-invalid + .exchange-rate-help { color: var(--color-note-text); }
+
+.exchange-rate-reset {
+  min-height: 42px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0 15px;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: 10px;
+  font-weight: 720;
+  cursor: pointer;
+  transition: transform 150ms ease-out, background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+@media (hover: hover) {
+  .currency-swap:hover { border-color: rgba(255, 255, 255, 0.34); background: rgba(255, 255, 255, 0.11); }
+  .exchange-rate-reset:hover { border-color: rgba(15, 23, 42, 0.14); background: var(--color-bg-muted); }
+}
+
+.currency-swap:active,
+.exchange-rate-reset:active { transform: scale(0.96); }
 
 .itinerary-cover { display: none; }
 .itinerary-heading { margin-bottom: 44px; }
@@ -1524,8 +1820,9 @@ a[target="_blank"]:not(.map-btn):active,
   .hero-intro { grid-template-columns: 1fr; gap: 30px; }
   .hero-summary { justify-self: start; }
   .route-title-row { grid-template-columns: 1fr; gap: 18px; }
-  .checklist-header { grid-template-columns: 1fr; gap: 28px; }
-  .checklist-progress { max-width: 360px; }
+  .checklist-header, .currency-header { grid-template-columns: 1fr; gap: 28px; }
+  .checklist-progress, .currency-rate-summary { max-width: 360px; }
+  .currency-grid { grid-template-columns: 1fr; }
   .day-detail, .day-switcher { max-width: none; }
   .notes-shell { grid-template-columns: 1fr; gap: 58px; }
 }
@@ -1533,7 +1830,7 @@ a[target="_blank"]:not(.map-btn):active,
 @media (max-width: 680px) {
   html { scroll-padding-top: 80px; }
   .shell { width: min(100% - 32px, 1160px); }
-  .topbar { min-height: 68px; gap: 16px; }
+  .topbar { min-height: 68px; gap: 10px; }
   .brand-word { font-size: 21px; }
   .brand-korean { display: none; }
   .install-button, .share-button { width: 44px; justify-content: center; padding: 0; }
@@ -1544,9 +1841,11 @@ a[target="_blank"]:not(.map-btn):active,
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
   }
-  .nav-pill { min-height: 42px; padding: 0 11px; font-size: 10px; }
+  .nav-actions { gap: 8px; }
+  .nav-pill { min-height: 42px; padding: 0 9px; font-size: 10px; }
   .nav-label-full { display: none; }
   .nav-label-short { display: inline; }
+  .itinerary-nav img { display: none; }
   .hero { padding-top: 18px; padding-bottom: 64px; }
   .hero-media { min-height: clamp(520px, 80svh, 620px); border-radius: 24px; }
   .hero-media-meta { top: 18px; right: 18px; left: 18px; font-size: 8px; }
@@ -1595,13 +1894,19 @@ a[target="_blank"]:not(.map-btn):active,
   .stay-copy .map-group { grid-template-columns: 1fr; }
   .stay-copy .map-label { grid-column: 1; }
   .itinerary-shell { margin-top: 88px; padding: 18px 0 88px; }
-  .itinerary-shell.checklist-mode { padding-top: 56px; }
-  .checklist-header { gap: 22px; padding-bottom: 32px; }
-  .checklist-header h2 { margin: 8px 0 10px; font-size: clamp(40px, 12vw, 52px); }
+  .itinerary-shell.checklist-mode, .itinerary-shell.currency-mode { padding-top: 56px; }
+  .checklist-header, .currency-header { gap: 22px; padding-bottom: 32px; }
+  .checklist-header h2, .currency-header h2 { margin: 8px 0 10px; font-size: clamp(40px, 12vw, 52px); }
   .checklist-progress { max-width: none; border-radius: 18px; padding: 19px; }
+  .currency-rate-summary { max-width: none; border-radius: 18px; padding: 19px; }
   .checklist-groups { grid-template-columns: 1fr; gap: 36px; margin-top: 38px; }
   .checklist-group ul { border-radius: 16px; }
   .checklist-group label { padding: 16px; }
+  .currency-grid { gap: 18px; margin-top: 38px; }
+  .currency-calculator { border-radius: 22px; padding: 20px; }
+  .currency-amount-field, .currency-result { border-radius: 16px; padding: 20px; }
+  .currency-result { min-height: 142px; }
+  .currency-settings { border-radius: 19px; padding: 24px 20px; }
   .itinerary-cover {
     position: relative;
     display: block;
@@ -1727,12 +2032,11 @@ a[target="_blank"]:not(.map-btn):active,
 
 @media (max-width: 360px) {
   .shell { width: calc(100% - 28px); }
+  .brand-word { font-size: 19px; }
   .brand-korean { display: none; }
-  .nav-actions { gap: 7px; }
-  .nav-pill { padding-inline: 10px; }
-  .checklist-nav .nav-label-short { font-size: 0; }
-  .checklist-nav .nav-label-short::after { content: "行前"; font-size: 10px; }
-  .itinerary-nav img { display: none; }
+  .nav-actions { gap: 5px; }
+  .install-button, .share-button { width: 38px; min-height: 40px; }
+  .nav-pill { min-height: 40px; padding-inline: 8px; }
   .hero-media-meta span:last-child { display: none; }
   .event-main { grid-template-columns: minmax(0, 1fr) 42px; gap: 7px; }
   .event-copy strong { font-size: 19px; }

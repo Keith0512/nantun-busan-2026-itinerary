@@ -10,6 +10,14 @@ import {
 
 import { uberRide } from "./uber-link";
 import {
+  convertCurrency,
+  defaultExchangeRate,
+  exchangeRateStorageKey,
+  parseExchangeRate,
+  readStoredExchangeRate,
+  type CurrencyDirection,
+} from "./currency-calculator";
+import {
   checklistGroups,
   checklistStorageKey,
   readChecklistSelection,
@@ -81,6 +89,18 @@ const uberCoordinates: Record<string, Coordinates> = {
   흰여울문화마을: [35.0773961, 129.0456513],
   자갈치시장: [35.095744, 129.0251226],
 };
+type PlannerView = "itinerary" | "checklist" | "currency";
+
+const twdFormatter = new Intl.NumberFormat("zh-TW", {
+  style: "currency",
+  currency: "TWD",
+  maximumFractionDigits: 2,
+});
+const krwFormatter = new Intl.NumberFormat("ko-KR", {
+  style: "currency",
+  currency: "KRW",
+  maximumFractionDigits: 0,
+});
 
 const place = (google: string, naver: string, label?: string): MapPlace => {
   const coordinates = uberCoordinates[naver];
@@ -487,11 +507,16 @@ function MapButtons({ item }: { item: MapPlace }) {
 }
 
 export default function Home() {
-  const [plannerView, setPlannerView] = useState<"itinerary" | "checklist">("itinerary");
+  const [plannerView, setPlannerView] = useState<PlannerView>("itinerary");
   const [activeDay, setActiveDay] = useState(0);
   const [expanded, setExpanded] = useState<string>("0-0");
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
   const [checklistReady, setChecklistReady] = useState(false);
+  const [currencyDirection, setCurrencyDirection] = useState<CurrencyDirection>("twd-to-krw");
+  const [currencyAmount, setCurrencyAmount] = useState("1000");
+  const [exchangeRate, setExchangeRate] = useState(defaultExchangeRate);
+  const [exchangeRateInput, setExchangeRateInput] = useState(String(defaultExchangeRate));
+  const [exchangeRateReady, setExchangeRateReady] = useState(false);
   const [shareStatus, setShareStatus] = useState("分享行程");
   const [selectedPhoto, setSelectedPhoto] = useState<TripPhoto | null>(null);
   const [installPrompt, setInstallPrompt] = useState<InstallPromptEvent | null>(null);
@@ -501,6 +526,21 @@ export default function Home() {
   const routeCover = activeDay === 2 ? photos.hotel : day.photos[0];
   const checklistTotal = checklistGroups.reduce((total, group) => total + group.items.length, 0);
   const checklistProgress = Math.round((checkedItems.length / checklistTotal) * 100);
+  const numericCurrencyAmount = Number(currencyAmount);
+  const hasCurrencyAmount = currencyAmount.trim() !== ""
+    && Number.isFinite(numericCurrencyAmount)
+    && numericCurrencyAmount >= 0;
+  const convertedCurrencyAmount = hasCurrencyAmount
+    ? convertCurrency(numericCurrencyAmount, currencyDirection, exchangeRate)
+    : null;
+  const sourceCurrency = currencyDirection === "twd-to-krw" ? "TWD" : "KRW";
+  const targetCurrency = currencyDirection === "twd-to-krw" ? "KRW" : "TWD";
+  const hasValidExchangeRateInput = parseExchangeRate(exchangeRateInput) !== null;
+  const formattedCurrencyResult = convertedCurrencyAmount === null
+    ? "—"
+    : targetCurrency === "KRW"
+      ? krwFormatter.format(convertedCurrencyAmount)
+      : twdFormatter.format(convertedCurrencyAmount);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -522,6 +562,30 @@ export default function Home() {
       // The checklist still works for this visit when device storage is unavailable.
     }
   }, [checkedItems, checklistReady]);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      let storedRate = defaultExchangeRate;
+      try {
+        storedRate = readStoredExchangeRate(window.localStorage.getItem(exchangeRateStorageKey));
+      } catch {
+        // Use the requested default when device storage is unavailable.
+      }
+      setExchangeRate(storedRate);
+      setExchangeRateInput(String(storedRate));
+      setExchangeRateReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    if (!exchangeRateReady) return;
+    try {
+      window.localStorage.setItem(exchangeRateStorageKey, String(exchangeRate));
+    } catch {
+      // The calculator still works for this visit when device storage is unavailable.
+    }
+  }, [exchangeRate, exchangeRateReady]);
 
   useEffect(() => {
     if (!selectedPhoto) return;
@@ -586,7 +650,7 @@ export default function Home() {
     }
   };
 
-  const showPlannerView = (view: "itinerary" | "checklist") => {
+  const showPlannerView = (view: PlannerView) => {
     setPlannerView(view);
     window.requestAnimationFrame(() => {
       document.querySelector("#itinerary")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -597,6 +661,35 @@ export default function Home() {
     setCheckedItems((current) => (
       current.includes(id) ? current.filter((item) => item !== id) : [...current, id]
     ));
+  };
+
+  const updateExchangeRate = (value: string) => {
+    setExchangeRateInput(value);
+    const nextRate = parseExchangeRate(value);
+    if (nextRate !== null) setExchangeRate(nextRate);
+  };
+
+  const normalizeExchangeRate = () => {
+    const nextRate = parseExchangeRate(exchangeRateInput);
+    setExchangeRateInput(String(nextRate ?? exchangeRate));
+  };
+
+  const swapCurrencyDirection = () => {
+    if (convertedCurrencyAmount !== null) {
+      setCurrencyAmount(
+        currencyDirection === "twd-to-krw"
+          ? convertedCurrencyAmount.toFixed(0)
+          : convertedCurrencyAmount.toFixed(2),
+      );
+    }
+    setCurrencyDirection((current) => (
+      current === "twd-to-krw" ? "krw-to-twd" : "twd-to-krw"
+    ));
+  };
+
+  const resetExchangeRate = () => {
+    setExchangeRate(defaultExchangeRate);
+    setExchangeRateInput(String(defaultExchangeRate));
   };
 
   const handleDayKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -661,7 +754,7 @@ export default function Home() {
               onClick={() => showPlannerView("checklist")}
             >
               <span className="nav-label-full">出發前檢查事項</span>
-              <span className="nav-label-short">行前清單</span>
+              <span className="nav-label-short">行前</span>
             </button>
             <button
               className={plannerView === "itinerary" ? "nav-pill itinerary-nav active" : "nav-pill itinerary-nav"}
@@ -674,6 +767,17 @@ export default function Home() {
               <span className="nav-label-full">查看行程</span>
               <span className="nav-label-short">行程</span>
               <img src="/icons/arrow-down.svg" alt="" />
+            </button>
+            <button
+              className={plannerView === "currency" ? "nav-pill currency-nav active" : "nav-pill currency-nav"}
+              type="button"
+              aria-label="開啟台幣韓幣匯率計算機"
+              aria-pressed={plannerView === "currency"}
+              aria-controls="currency-view"
+              onClick={() => showPlannerView("currency")}
+            >
+              <span className="nav-label-full">匯率計算</span>
+              <span className="nav-label-short">匯率</span>
             </button>
           </div>
         </nav>
@@ -726,9 +830,15 @@ export default function Home() {
       </section>
 
       <section
-        className={`itinerary-shell ${plannerView === "checklist" ? "checklist-mode" : ""}`}
+        className={`itinerary-shell ${plannerView === "itinerary" ? "" : `${plannerView}-mode`}`}
         id="itinerary"
-        aria-labelledby={plannerView === "itinerary" ? "itinerary-title" : "checklist-title"}
+        aria-labelledby={
+          plannerView === "itinerary"
+            ? "itinerary-title"
+            : plannerView === "checklist"
+              ? "checklist-title"
+              : "currency-title"
+        }
       >
         {plannerView === "itinerary" ? (
         <div id="itinerary-view">
@@ -855,7 +965,7 @@ export default function Home() {
           </button>
         </div>
         </div>
-        ) : (
+        ) : plannerView === "checklist" ? (
           <div className="checklist-view shell" id="checklist-view">
             <header className="checklist-header">
               <div>
@@ -917,6 +1027,90 @@ export default function Home() {
                   </ul>
                 </section>
               ))}
+            </div>
+          </div>
+        ) : (
+          <div className="currency-view shell" id="currency-view">
+            <header className="currency-header">
+              <div>
+                <p className="eyebrow dark">TRAVEL MONEY</p>
+                <h2 id="currency-title">台幣・韓幣換算</h2>
+                <p>出發前先抓好旅費尺度。自訂匯率只會儲存在目前這台裝置。</p>
+              </div>
+              <div className="currency-rate-summary" aria-live="polite">
+                <span>目前使用匯率</span>
+                <strong>{exchangeRate.toFixed(5)}</strong>
+                <small>1 KRW = {exchangeRate.toFixed(5)} TWD</small>
+              </div>
+            </header>
+
+            <div className="currency-grid">
+              <section className="currency-calculator" aria-label="台幣韓幣換算">
+                <p className="currency-card-label">QUICK CONVERT</p>
+                <div className="currency-amount-field">
+                  <label htmlFor="currency-amount">輸入金額</label>
+                  <div>
+                    <span aria-hidden="true">{sourceCurrency}</span>
+                    <input
+                      id="currency-amount"
+                      type="number"
+                      min="0"
+                      step="any"
+                      inputMode="decimal"
+                      value={currencyAmount}
+                      onChange={(event) => setCurrencyAmount(event.target.value)}
+                    />
+                  </div>
+                  <small>{sourceCurrency === "TWD" ? "新台幣" : "韓元"}</small>
+                </div>
+
+                <button
+                  className="currency-swap"
+                  type="button"
+                  aria-label={`切換為${targetCurrency === "TWD" ? "新台幣換韓元" : "韓元換新台幣"}`}
+                  onClick={swapCurrencyDirection}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 7h11m0 0-3-3m3 3-3 3M17 17H6m0 0 3 3m-3-3 3-3" />
+                  </svg>
+                  交換幣別
+                </button>
+
+                <div className="currency-result" aria-live="polite">
+                  <span>換算結果</span>
+                  <output htmlFor="currency-amount">{formattedCurrencyResult}</output>
+                  <small>{targetCurrency === "TWD" ? "新台幣 TWD" : "韓元 KRW"}</small>
+                </div>
+              </section>
+
+              <aside className="currency-settings" aria-labelledby="exchange-rate-title">
+                <p className="eyebrow dark">YOUR RATE</p>
+                <h3 id="exchange-rate-title">自訂換算匯率</h3>
+                <p>預設以 1 韓元兌換 0.02514 新台幣估算，可依當下刷卡或換匯匯率調整。</p>
+                <label htmlFor="exchange-rate">每 1 韓元可兌換</label>
+                <div className={`exchange-rate-field ${hasValidExchangeRateInput ? "" : "is-invalid"}`}>
+                  <span>1 KRW =</span>
+                  <input
+                    id="exchange-rate"
+                    type="number"
+                    min="0"
+                    step="0.00001"
+                    inputMode="decimal"
+                    value={exchangeRateInput}
+                    aria-invalid={!hasValidExchangeRateInput}
+                    aria-describedby="exchange-rate-help"
+                    onChange={(event) => updateExchangeRate(event.target.value)}
+                    onBlur={normalizeExchangeRate}
+                  />
+                  <span>TWD</span>
+                </div>
+                <p className="exchange-rate-help" id="exchange-rate-help">
+                  {hasValidExchangeRateInput ? "已自動儲存在此裝置" : "請輸入大於 0 的匯率"}
+                </p>
+                <button className="exchange-rate-reset" type="button" onClick={resetExchangeRate}>
+                  恢復預設匯率
+                </button>
+              </aside>
             </div>
           </div>
         )}
