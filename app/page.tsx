@@ -81,6 +81,7 @@ type Coordinates = NaverMapCoordinates;
 
 const uberCoordinates: Record<string, Coordinates> = {
   "부산 해운대구 달맞이길 30 엘시티 레지던스": [35.1598316, 129.1697374],
+  "클럽디 오아시스 부산 해운대구 달맞이길 30 엘시티": [35.1600514, 129.1684719],
   "타오위안 국제공항 제2터미널": [25.0775532, 121.2329991],
   김해국제공항: [35.1800774, 128.9364014],
   "스카이라인루지 부산": [35.1941296, 129.2191333],
@@ -304,18 +305,22 @@ const days: Day[] = [
         tag: "FREE TIME",
         title: "海雲台自由活動",
         summary: "海灘散步、咖啡、逛街或補貨，留一段自己的時間。",
-        detail: "海雲台周邊有海灘步道、商店、咖啡廳與高樓海景。請記得在 15:40 前抵達尾浦站。",
+        detail: "海雲台周邊有海灘步道、商店、咖啡廳與高樓海景。晴天請在 15:40 前抵達尾浦站；遇雨則改走下方 Club D Oasis 備案。",
         photos: [photos.haeundae],
         place: place("Haeundae Beach", "해운대해수욕장"),
       },
       {
         time: "15:40",
-        tag: "MEET UP",
-        title: "抵達尾浦站",
-        summary: "提早集合，預留拍照、排隊與確認票券時間。",
-        detail: "尾浦站是天空膠囊熱門起點。確認搭乘人數與 QR Code，別把時間卡得太剛好。",
-        photos: [photos.mipoStation],
-        place: place("Mipo Station Haeundae Blue Line Park", "해운대블루라인파크 미포정거장"),
+        tag: "RAIN PLAN",
+        title: "Club D Oasis｜雨天備案",
+        summary: "雨勢明顯時，改到 LCT 館內享受水療、汗蒸幕與室內水上設施。",
+        detail: "晴天仍照原行程前往尾浦站搭天空膠囊；遇雨時則改到 LCT MALL 3–6 樓的 Club D Oasis，依館內橘色指示線前往入口。",
+        note: "雨天方案｜出發前請確認當日營業與票券資訊",
+        place: place(
+          "Club D Oasis, 30 Dalmaji-gil, Haeundae-gu, Busan",
+          "클럽디 오아시스 부산 해운대구 달맞이길 30 엘시티",
+          "Club D Oasis",
+        ),
       },
       {
         time: "16:00 — 16:30",
