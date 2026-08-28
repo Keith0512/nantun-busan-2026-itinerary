@@ -512,7 +512,7 @@ export default function Home() {
   const [expanded, setExpanded] = useState<string>("0-0");
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
   const [checklistReady, setChecklistReady] = useState(false);
-  const [currencyDirection, setCurrencyDirection] = useState<CurrencyDirection>("twd-to-krw");
+  const [currencyDirection, setCurrencyDirection] = useState<CurrencyDirection>("krw-to-twd");
   const [currencyAmount, setCurrencyAmount] = useState("1000");
   const [exchangeRate, setExchangeRate] = useState(defaultExchangeRate);
   const [exchangeRateInput, setExchangeRateInput] = useState(String(defaultExchangeRate));
