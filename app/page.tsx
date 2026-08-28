@@ -59,6 +59,15 @@ type Day = {
   photos: TripPhoto[];
   stops: Stop[];
 };
+type RainyDayOption = {
+  kicker: string;
+  title: string;
+  summary: string;
+  detail: string;
+  note?: string;
+  thumbnail: { src: string; alt: string; position: string };
+  place: MapPlace;
+};
 
 type InstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -92,6 +101,9 @@ const uberCoordinates: Record<string, Coordinates> = {
   "송도해상케이블카 송도베이스테이션": [35.0763321, 129.0235399],
   흰여울문화마을: [35.0773961, 129.0456513],
   자갈치시장: [35.095744, 129.0251226],
+  "부산엑스더스카이 부산 해운대구 달맞이길 30": [35.1613825711, 129.168043276],
+  "신세계백화점 센텀시티점 부산 해운대구 센텀남대로 35": [35.1687608, 129.1296435],
+  "스누피플레이스 부산 해운대구 해운대해변로 197": [35.1584016, 129.1527892],
 };
 type PlannerView = "itinerary" | "checklist" | "currency";
 
@@ -473,6 +485,47 @@ const days: Day[] = [
   },
 ];
 
+const rainyDayOptions: RainyDayOption[] = [
+  {
+    kicker: "最近｜幾乎不用淋雨",
+    title: "LCT・釜山 X the SKY",
+    summary: "住處同棟就能安排餐廳、商店與高樓觀景，移動最輕鬆。",
+    detail: "觀景台位於 LCT Landmark Tower 98–100 樓，室內還有媒體展示與咖啡空間。",
+    note: "雲層低或雨勢過大時，高樓景觀可能受影響。",
+    thumbnail: { src: "/places/rainy-lct.jpg", alt: "釜山 X the SKY 室內觀景空間", position: "center bottom" },
+    place: place(
+      "BUSAN X the SKY, 30 Dalmaji-gil, Haeundae-gu, Busan",
+      "부산엑스더스카이 부산 해운대구 달맞이길 30",
+      "釜山 X the SKY",
+    ),
+  },
+  {
+    kicker: "首選｜適合一路逛到晚上",
+    title: "新世界 Centum City",
+    summary: "百貨、餐廳與 SPA LAND 集中在同一區，整天雨勢不斷時最實用。",
+    detail: "從 LCT 搭車約 10–15 分鐘；想放鬆時可銜接館內 SPA LAND 汗蒸幕與溫泉。",
+    note: "百貨與 SPA LAND 的營業時間不同，出發前請再確認當日資訊。",
+    thumbnail: { src: "/places/rainy-centum-city.jpg", alt: "新世界 Centum City 百貨室內空間", position: "center bottom" },
+    place: place(
+      "Shinsegae Department Store Centum City, 35 Centumnam-daero, Busan",
+      "신세계백화점 센텀시티점 부산 해운대구 센텀남대로 35",
+      "新世界 Centum City",
+    ),
+  },
+  {
+    kicker: "輕鬆｜咖啡・拍照・休息",
+    title: "Snoopy Place Busan",
+    summary: "海雲台附近的室內主題咖啡館，可以喝咖啡、拍照與逛周邊商品。",
+    detail: "適合安排 60–90 分鐘，作為雨天行程中的輕鬆休息站。",
+    thumbnail: { src: "/places/rainy-snoopy-place.jpg", alt: "Snoopy Place Busan 推薦資訊", position: "center top" },
+    place: place(
+      "Snoopy Place Busan, 197 Haeundaehaebyeon-ro, Busan",
+      "스누피플레이스 부산 해운대구 해운대해변로 197",
+      "Snoopy Place Busan",
+    ),
+  },
+];
+
 const foodTags = new Set([
   "DINNER",
   "HANWOO",
@@ -553,6 +606,7 @@ export default function Home() {
   const [plannerView, setPlannerView] = useState<PlannerView>("itinerary");
   const [activeDay, setActiveDay] = useState(0);
   const [expanded, setExpanded] = useState<string>("0-0");
+  const [rainyDayOpen, setRainyDayOpen] = useState(false);
   const [checkedItems, setCheckedItems] = useState<string[]>([]);
   const [checklistReady, setChecklistReady] = useState(false);
   const [currencyDirection, setCurrencyDirection] = useState<CurrencyDirection>("krw-to-twd");
@@ -685,6 +739,7 @@ export default function Home() {
   const selectDay = (index: number, scroll = true) => {
     setActiveDay(index);
     setExpanded(`${index}-0`);
+    setRainyDayOpen(false);
     setSelectedPhoto(null);
     if (scroll) {
       window.requestAnimationFrame(() => {
@@ -898,7 +953,7 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="day-tabs shell" role="tablist" aria-label="選擇行程日期">
+        <div className={activeDay === 2 ? "day-tabs shell has-rainy-day" : "day-tabs shell"} role="tablist" aria-label="選擇行程日期">
           {days.map((tab, index) => (
             <button
               className={index === activeDay ? "day-tab active" : "day-tab"}
@@ -915,6 +970,65 @@ export default function Home() {
             </button>
           ))}
         </div>
+
+        {activeDay === 2 && (
+          <div className="rainy-day shell">
+            <button
+              className="rainy-day-toggle"
+              type="button"
+              aria-expanded={rainyDayOpen}
+              aria-controls="rainy-day-options"
+              onClick={() => setRainyDayOpen((current) => !current)}
+            >
+              <span className="rainy-day-icon" aria-hidden="true">☂</span>
+              <span className="rainy-day-toggle-copy">
+                <small>DAY 3 · ALTERNATE PLAN</small>
+                <strong>雨天備案</strong>
+              </span>
+              <span className="rainy-day-toggle-action">
+                {rainyDayOpen ? "收合備案" : "查看 3 個室內景點"}
+                <span className="rainy-day-chevron" aria-hidden="true" />
+              </span>
+            </button>
+
+            {rainyDayOpen && (
+              <section className="rainy-day-panel" id="rainy-day-options" aria-labelledby="rainy-day-title">
+                <header className="rainy-day-heading">
+                  <div>
+                    <p className="eyebrow dark">WHEN IT RAINS</p>
+                    <h3 id="rainy-day-title">下雨也能好好逛釜山</h3>
+                  </div>
+                  <p>依雨勢與想走的步調，從最近、最完整或最輕鬆的室內去處中挑一個。</p>
+                </header>
+
+                <div className="rainy-day-grid">
+                  {rainyDayOptions.map((option, index) => (
+                    <article className="rainy-day-card" key={option.title}>
+                      <div
+                        className="rainy-day-thumbnail"
+                        role="img"
+                        aria-label={option.thumbnail.alt}
+                        style={{
+                          backgroundImage: `url(${option.thumbnail.src})`,
+                          backgroundPosition: option.thumbnail.position,
+                        }}
+                      />
+                      <div className="rainy-day-card-meta">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <small>{option.kicker}</small>
+                      </div>
+                      <h4>{option.title}</h4>
+                      <p>{option.summary}</p>
+                      <p className="rainy-day-detail">{option.detail}</p>
+                      {option.note && <p className="rainy-day-note">{option.note}</p>}
+                      <MapButtons item={option.place} />
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
 
         <article
           className="day-detail shell"
