@@ -324,7 +324,7 @@ const days: Day[] = [
         summary: "小巧彩色車廂沿高架軌道慢行，從高處看海。",
         detail: "車速不快，很適合拍照與錄影。靠海側視野佳，進站前可先整理好相機與手機。",
         photos: [photos.capsule],
-        place: place("Cheongsapo Station Haeundae Blue Line Park", "해운대블루라인파크 청사포정거장"),
+        place: place("Mipo Station Haeundae Blue Line Park", "해운대블루라인파크 미포정거장"),
       },
       {
         time: "17:00 — 18:20",
