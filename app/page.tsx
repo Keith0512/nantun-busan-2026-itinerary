@@ -22,8 +22,14 @@ import {
   checklistStorageKey,
   readChecklistSelection,
 } from "./travel-checklist";
+import {
+  detectNaverMapDevice,
+  naverMapLinks,
+  type NaverMapCoordinates,
+  type NaverMapLinks,
+} from "./naver-map";
 
-type MapPlace = { label?: string; google: string; naver: string; uber?: string };
+type MapPlace = { label?: string; google: string; naver: NaverMapLinks; uber?: string };
 type TripPhoto = {
   src: string;
   alt: string;
@@ -61,10 +67,8 @@ type InstallPromptEvent = Event & {
 
 const googleMap = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-const naverMap = (query: string) =>
-  `https://map.naver.com/p/search/${encodeURIComponent(query)}`;
 
-type Coordinates = readonly [latitude: number, longitude: number];
+type Coordinates = NaverMapCoordinates;
 
 const uberCoordinates: Record<string, Coordinates> = {
   "부산 해운대구 달맞이길 30 엘시티 레지던스": [35.1598316, 129.1697374],
@@ -107,7 +111,7 @@ const place = (google: string, naver: string, label?: string): MapPlace => {
 
   return {
     google: googleMap(google),
-    naver: naverMap(naver),
+    naver: naverMapLinks(naver, coordinates),
     uber: coordinates
       ? uberRide(label ?? google, naver, coordinates[0], coordinates[1])
       : undefined,
@@ -480,6 +484,38 @@ const foodTags = new Set([
 ]);
 
 function MapButtons({ item }: { item: MapPlace }) {
+  const openNaverMap = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    const device = detectNaverMapDevice(
+      window.navigator.userAgent,
+      window.navigator.platform,
+      window.navigator.maxTouchPoints,
+    );
+    if (device === "web") return;
+
+    event.preventDefault();
+    if (device === "android") {
+      window.location.href = item.naver.android;
+      return;
+    }
+
+    const cleanup = () => {
+      window.clearTimeout(fallbackTimer);
+      document.removeEventListener("visibilitychange", stopFallback);
+      window.removeEventListener("pagehide", cleanup);
+    };
+    const stopFallback = () => {
+      if (document.visibilityState === "hidden") cleanup();
+    };
+
+    const fallbackTimer = window.setTimeout(() => {
+      cleanup();
+      window.location.href = item.naver.web;
+    }, 1500);
+    document.addEventListener("visibilitychange", stopFallback);
+    window.addEventListener("pagehide", cleanup, { once: true });
+    window.location.href = item.naver.app;
+  };
+
   return (
     <div className="map-group" aria-label={`${item.label ?? "地點"}導航`}>
       {item.label && <span className="map-label">{item.label}</span>}
@@ -489,7 +525,14 @@ function MapButtons({ item }: { item: MapPlace }) {
           <span>Google Maps</span>
           <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
         </a>
-        <a className="map-btn naver" href={item.naver} target="_blank" rel="noreferrer" aria-label="使用 Naver Map 開啟">
+        <a
+          className="map-btn naver"
+          href={item.naver.web}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="優先使用 Naver Map App 開啟"
+          onClick={openNaverMap}
+        >
           <span className="map-icon"><img src="/icons/naver.svg" alt="" /></span>
           <span>Naver Map</span>
           <img className="external-icon" src="/icons/arrow-square-out.svg" alt="" />
